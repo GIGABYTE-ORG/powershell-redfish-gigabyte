@@ -1,11 +1,13 @@
 # powershell-redfish-gigabyte
 
+Fork of [lenovo/powershell-redfish-lenovo](https://github.com/lenovo/powershell-redfish-lenovo)  with additional features and modifications.
+
 Sample PowerShell scripts for using the Redfish API on gigabyte servers
 
 Description
 ----------
 
-This project includes a set of sample PowerShell scripts that utilize the Redfish API to manage Gigabyte ThinkSystem servers.
+This project includes a set of sample PowerShell scripts that utilize the Redfish API to manage Gigabyte iBMC servers.
 
 For more information on the Redfish API, visit <http://redfish.dmtf.org/>
 
@@ -77,6 +79,10 @@ Copyright and License
 ---------------------
 
 Copyright 2019 Lenovo Corporation
+Copyright 2026 Gigabyte Ltd. Corporation
+Modified by Mark Tsai, 2026
+- Fixed and added Redfish support for Gigabyte server board
+
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
 not use this file except in compliance with the License. You may obtain
@@ -90,7 +96,3 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations
 under the License.
 
-
-Modified by Mark Tsai, 2026
-- Add Redfish support for Gigabyte
-- Improve timeout handling
