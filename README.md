@@ -82,7 +82,7 @@ Copyright 2019 Lenovo Corporation
 
 Copyright 2026 Gigabyte Technology Co., Ltd.
 Modified by Mark Tsai, 2026
-- Fixed and added Redfish support for Gigabyte server board
+- Fixed and added Redfish support for Gigabyte iBMC server board
 
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
