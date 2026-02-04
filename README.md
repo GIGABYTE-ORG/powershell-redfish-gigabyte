@@ -2,7 +2,7 @@
 
 Fork of [lenovo/powershell-redfish-lenovo](https://github.com/lenovo/powershell-redfish-lenovo)  with additional features and modifications.
 
-Sample PowerShell scripts for using the Redfish API on gigabyte servers
+Sample PowerShell scripts for using the Redfish API on Gigabyte iBMC servers
 
 Description
 ----------
