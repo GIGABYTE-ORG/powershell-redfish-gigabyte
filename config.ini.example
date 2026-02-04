@@ -2,6 +2,3 @@
 BmcIp = "10.1.9.129"
 BmcUsername = "admin"
 BmcUserpassword = "OG4P5100112"
-SystemId = 
-ManagerId = 
-ChassisId = 
