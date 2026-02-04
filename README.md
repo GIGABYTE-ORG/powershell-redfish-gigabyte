@@ -1,6 +1,6 @@
-# powershell-redfish-lenovo
+# powershell-redfish-gigabyte
 
-Sample PowerShell scripts for using the Redfish API on Lenovo servers
+Sample PowerShell scripts for using the Redfish API on gigabyte servers
 
 Description
 ----------
