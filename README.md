@@ -67,9 +67,9 @@ Installing
     7. These files will automatically be imported as modules on every new PowerShell session.
  
   Method 3 : Run import-example.ps1 
-    1. Open a PowerShell terminal and type in `.\import-example.ps1`, This should import *.psm1 example files
+    1. Open a PowerShell terminal and type in `.\import-examples.ps1`, This should import *.psm1 example files
        ```
-       .\import-example.ps1
+       .\import-examples.ps1
        ```
 Requirements
 ----------
