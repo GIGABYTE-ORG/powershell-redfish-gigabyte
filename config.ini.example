@@ -1,0 +1,7 @@
+[BMC]
+BmcIp = 
+BmcUsername = 
+BmcUserpassword = 
+SystemId = 
+ManagerId = 
+ChassisId = 
