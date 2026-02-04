@@ -1,5 +1,7 @@
-| Category           | Script Name                                | ThinkSystem        | ThinkSystem    | ThinkSystem v2  | ThinkSystem v3  | ThinkSystem v3  |
-|                    |                                            | AMD 2P(Rome/Milan) | Intel(Purley)  | Intel(Whitley)  | Intel (EGS)     |  AMD (Genoa)    |
+| Category           | Script Name                                |  WRX90 AI TOP      | ThinkSystem    | ThinkSystem v2  | ThinkSystem v3  | ThinkSystem v3  |
+|                    |                                            | AMD (Rome/Milan)   | Intel(Purley)  | Intel(Whitley)  | Intel (EGS)     |  AMD (Genoa)    |
+|--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|
+| Discovery          | todo                                       |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|
 | Inventory          | get_bmc_inventory.psm1                     |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |
 |                    | get_cpu_inventory.psm1                     |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |
