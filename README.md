@@ -4,12 +4,12 @@ Fork of [lenovo/powershell-redfish-lenovo](https://github.com/lenovo/powershell-
 
 This fork is maintained by [marktsai0316@gmail.com](mailto:marktsai0316@gmail.com) .
 
-Sample PowerShell scripts for using the Redfish API on Gigabyte iBMC servers
+Sample PowerShell scripts for using the Redfish API on Gigabyte BMC servers
 
 Description
 ----------
 
-This project includes a set of sample PowerShell scripts that utilize the Redfish API to manage Gigabyte iBMC servers.
+This project includes a set of sample PowerShell scripts that utilize the Redfish API to manage Gigabyte BMC servers.
 
 For more information on the Redfish API, visit <http://redfish.dmtf.org/>
 
@@ -85,7 +85,7 @@ Copyright 2019 Lenovo Corporation
 Copyright 2026 Gigabyte Technology Co., Ltd.
 
 Modified by Mark Tsai<[marktsai0316@gmail.com](mailto:marktsai0316@gmail.com)>
-- Fixed and added Redfish support for Gigabyte iBMC server board
+- Fixed and added Redfish support for Gigabyte BMC server board
 
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may
