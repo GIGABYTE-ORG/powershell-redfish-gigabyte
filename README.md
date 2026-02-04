@@ -20,22 +20,40 @@ Installing
   `git clone https://github.com/GIGABYTE-ORG/powershell-redfish-gigabyte`
   A set of PowerShell examples is provided under the examples directory of this project.
 
+  ```
+  git clone https://github.com/GIGABYTE-ORG/powershell-redfish-gigabyte
+  ```
+  
 * In order for these scripts to be executed, the execution policy needs to be lowered from "Restricted". For instance, set the policy to "RemoteSigned" by running the following:
   `Set-ExecutionPolicy RemoteSigned`
 
+  ```
+  Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+  ```
+
 * Import example scripts individually as PowerShell modules, or auto-import all modules by enabling a profile
 
-  To import individual modules:
+  Method 1 : To import individual modules:
     1. Open a PowerShell terminal and navigate to .\examples directory in powershell-redfish-gigabyte
     2. Import the target script using Import-Module. For example:
-    `Import-Module .\get_power_state.psm1`
-
-
-  To automatically import all scripts by enabling a profile:
+    ```
+    Import-Module .\get_power_state.psm1
+    ```
+  Method 2 : To automatically import all scripts by enabling a profile:
     1. Open a PowerShell terminal and type in `$profile`, This should display the path that would be used to store your profile
+       ```
+       PS C:\Users\Mark> $profile
+       C:\Users\Mark\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+       ```
     2. Run `test-path $profile` to check whether your profile is already created
     3. If the profile is not created, type `new-item -path $profile -itemtype file -force` to create the profile
+       ```
+       new-item -path $profile -itemtype file -force
+       ```
     4. You can customize the profile by launching the PowerShell ISE: `powershell_ise $profile`. This will open the profile ps1 file (typically named "Microsoft.PowerShell_profile.ps1")
+       ```
+       powershell_ise $profile
+       ```  
     5. Enter the following code to the profile ps1 file. This will automatically import all the scripts on PowerShell startup:
 
        ```
@@ -45,10 +63,14 @@ Installing
        foreach ($FUNC in $(dir ${psdir}\*.psm1)) {Import-Module $FUNC.FullName}
        Write-Host "Custom PowerShell Environment Loaded"
        ```
-
     6. Copy the powershell-redfish-gigabyte repo ".psm1" example files to your "autoload" folder
     7. These files will automatically be imported as modules on every new PowerShell session.
-
+ 
+  Method 3 : Run import-example.ps1 
+    1. Open a PowerShell terminal and type in `.\import-example.ps1`, This should import *.psm1 example files
+       ```
+       .\import-example.ps1
+       ```
 Requirements
 ----------
 
