@@ -273,7 +273,7 @@ function get_nic_inventory
                 }
             }  
         }
-        $nic_details | ConvertTo-Json -Depth 10
+        nic_details | foreach { ConvertOutputHashTableToObject $_ }
 
     }
     catch
