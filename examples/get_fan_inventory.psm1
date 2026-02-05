@@ -111,6 +111,7 @@ function get_fan_inventory
                 
                 #get Fans info
                 $fans_count = $fan_converted_object."Members@odata.count"
+                $ht_fans_info_array=@()
                 for($num =0;$num -lt $fans_count;$num++)
                 {
                     $fans_x_url = "https://$ip" + $fan_converted_object.Members[$num]."@odata.id"
@@ -132,7 +133,8 @@ function get_fan_inventory
                         }
                     }
                     # Output result
-                    $ht_fans_info | ConvertTo-Json
+                    #$ht_fans_info | ConvertTo-Json
+                    $ht_fans_info_array+=$ht_fans_info
                 }
             }
             #Get thermal_url resource
@@ -142,6 +144,7 @@ function get_fan_inventory
             
             #get Fans info
             $list_fans_info = $converted_object.Fans
+            $thermal_fans_info_array=@()
             foreach($fans_info in $list_fans_info)
             {
                 $hash_table = @{}
@@ -156,8 +159,28 @@ function get_fan_inventory
                 }
                 # Output result
                 #$thermal_fans_info | ConvertTo-Json -Depth 10
-                ConvertOutputHashTableToObject $thermal_fans_info
+                #ConvertOutputHashTableToObject $thermal_fans_info
+                $thermal_fans_info_array+=$thermal_fans_info
             }
+            # 合併兩個陣列
+            $outputarray = @()
+            foreach ($item2 in $thermal_fans_info_array) {
+                $outputItem = $item2.Clone()
+                # 先從 array1 取得相同名稱的項目
+                $item1 = $ht_fans_info_array | Where-Object { $_.Name -eq $item2.Name } | Select-Object -First 1
+                # 如果有找到，先加入 array1 的屬性
+                if ($item1) {
+                    foreach ($key in $item1.Keys) {
+                        if (-not $outputItem.ContainsKey($key)) {
+                            $outputItem[$key] = $item1[$key]
+                        }
+                    }
+                }
+                $outputarray += $outputItem
+            }
+
+            #$outputarray.count 
+            $outputarray | Foreach { ConvertOutputHashTableToObject $_ } 
         }        
     }
     catch
