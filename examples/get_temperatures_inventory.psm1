@@ -114,7 +114,7 @@ function get_temperatures_inventory
 
             foreach($temperaturereadingscelsius_url in $thermalmetrics_converted_object.TemperatureReadingsCelsius)
             {
-                $temperaturereadingscelsius_x_url = "https://$ip" + $temperaturereadingscelsius_url.DataSourceUri
+                $temperaturereadingscelsius_x_url = "https://$ip" + $temperaturereadingscelsius_url."@odata.id"  #DataSourceUri
                 $temperaturereadingscelsius_x_response = Invoke-WebRequest -Uri $temperaturereadingscelsius_x_url -Headers $JsonHeader -Method Get -UseBasicParsing
                 $temperaturereadingscelsius_x_converted_object = $temperaturereadingscelsius_x_response.Content | ConvertFrom-Json
                 $hash_table = @{}
@@ -129,7 +129,7 @@ function get_temperatures_inventory
                     $ht_temperatures_info[$key] = $hash_table[$key]
                 }
                 # Output result
-                $ht_temperatures_info | ConvertTo-Json -Depth 5
+                ConvertOutputHashTableToObject $ht_temperatures_info
             }
         }
     }
