@@ -154,7 +154,7 @@ function get_system_log
                     continue
                 }
                 # Output result
-                $hash_table2.Members | ConvertTo-Json
+                $hash_table2.Members | Foreach {  $_ } 
             }
         }
     }    
