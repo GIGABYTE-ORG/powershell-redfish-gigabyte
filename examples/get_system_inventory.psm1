@@ -121,49 +121,51 @@ function get_system_inventory
             }
             
             $hash_table_oem = @{}
-            $hash_table.Oem.psobject.properties | Foreach { $hash_table_oem[$_.Name] = $_.Value }
-            # for Lenovo Oem
-            if ($hash_table.Keys -contains 'Oem' -and $hash_table_oem.Keys -contains 'Lenovo') 
+            if ($hash_table.Keys -contains 'Oem')
             {
-                $hash_table_lenovo = @{}
-                $hash_table_oem.Lenovo.psobject.properties | Foreach { $hash_table_lenovo[$_.Name] = $_.Value }
-                $system['Oem'] = @{'Lenovo' = @{}}
-                foreach ($oem_property in $lenovo_oem_properties)
+                $hash_table.Oem.psobject.properties | Foreach { $hash_table_oem[$_.Name] = $_.Value }
+                if ($hash_table_oem.Keys -contains 'Lenovo') 
                 {
-                    if($hash_table_lenovo.Keys -contains $oem_property)
+                    $hash_table_lenovo = @{}
+                    $hash_table_oem.Lenovo.psobject.properties | Foreach { $hash_table_lenovo[$_.Name] = $_.Value }
+                    $system['Oem'] = @{'Lenovo' = @{}}
+                    foreach ($oem_property in $lenovo_oem_properties)
                     {
-                        $system['Oem']['Lenovo'][$oem_property] = $hash_table_lenovo.$oem_property
+                        if($hash_table_lenovo.Keys -contains $oem_property)
+                        {
+                            $system['Oem']['Lenovo'][$oem_property] = $hash_table_lenovo.$oem_property
+                        }
                     }
                 }
-            }
-            # for Gbt Oem
-            <#
-                "Oem": {
-                    "Gbt": {
-                        "@odata.type": "#GBTSystemsOemProperty.v1_0_0.GBTSystemsOemProperty"
+                <#
+                    "Oem": {
+                        "Gbt": {
+                            "@odata.type": "#GBTSystemsOemProperty.v1_0_0.GBTSystemsOemProperty"
+                        },
+                        "VirtualMedia": {
+                            "@odata.type": "#GBTSystemVirtualMedia.v1_0_0.GBTSystemVirtualMedia",
+                            "CDInstances": 4,
+                            "RMediaStatus": "Disabled",
+                            "RemovableStickInstances": 4
+                        }
                     },
-                    "VirtualMedia": {
-                        "@odata.type": "#GBTSystemVirtualMedia.v1_0_0.GBTSystemVirtualMedia",
-                        "CDInstances": 4,
-                        "RMediaStatus": "Disabled",
-                        "RemovableStickInstances": 4
-                    }
-                },
-            #>
-            if ($hash_table.Keys -contains 'Oem' -and $hash_table_oem.Keys -contains 'Gbt') 
-            {
-                $gbt_oem_properties = @() #TODO
-                $hash_table_gbt = @{}
-                $hash_table_oem.Gbt.psobject.properties | Foreach { $hash_table_gbt[$_.Name] = $_.Value }
-                $system['Oem'] = @{'Gbt' = @{}}
-                foreach ($oem_property in $gbt_oem_properties)
+                #>
+                if ($hash_table_oem.Keys -contains 'Gbt') 
                 {
-                    if($hash_table_gbt.Keys -contains $oem_property)
+                    $hash_table_gbt = @{}
+                    $hash_table_oem.Gbt.psobject.properties | Foreach { $hash_table_gbt[$_.Name] = $_.Value }
+                    $gbt_oem_properties = @() #TODO
+                    $system['Oem'] = @{'Gbt' = @{}}
+                    foreach ($oem_property in $gbt_oem_properties)
                     {
-                        $system['Oem']['Gbt'][$oem_property] = $hash_table_gbt.$oem_property
+                        if($hash_table_gbt.Keys -contains $oem_property)
+                        {
+                            $system['Oem']['Gbt'][$oem_property] = $hash_table_gbt.$oem_property
+                        }
                     }
                 }
             }
+
 
             # Get System EtherNetInterfaces resources
             $nics_url = "https://$ip" + $converted_object.EthernetInterfaces."@odata.id"
