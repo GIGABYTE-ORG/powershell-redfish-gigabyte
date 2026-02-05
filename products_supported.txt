@@ -5,14 +5,14 @@
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | Inventory          | get_bmc_inventory.psm1                     |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_cpu_inventory.psm1                     |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | get_fan_inventory.psm1                     |        *Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | get_fan_inventory.psm1                     |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_memory_inventory.psm1                  |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_nic_inventory.psm1                     |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_pci_inventory.psm1                     |        *Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_psu_inventory.psm1                     |        *Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_power_redundancy.psm1                  |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_storage_inventory.psm1                 |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | get_system_inventory.psm1                  |        *Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | get_system_inventory.psm1                  |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_chassis_inventory.psm1                 |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_temperatures_inventory.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_volt_inventory.psm1                    |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
