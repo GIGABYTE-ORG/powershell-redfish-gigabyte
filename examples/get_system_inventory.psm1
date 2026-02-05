@@ -189,7 +189,8 @@ function get_system_inventory
            
             # Output result
             $system['EtherNetInterfaces'] = $list_ethernetinterface
-            $system  | ConvertTo-Json -Depth 10
+            #$system  | ConvertTo-Json -Depth 10
+            ConvertOutputHashTableToObject $system
         }
     }
     catch
