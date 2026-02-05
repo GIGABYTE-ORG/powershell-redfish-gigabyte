@@ -17,7 +17,6 @@
 |                    | get_temperatures_inventory.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | lenovo_get_cpu_inventory.psm1              |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_volt_inventory.psm1                    |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | get_chassis_inventory.psm1                 |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | Power Control      | get_power_state.psm1                       |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_system_reset_types.psm1                |        Yes         |     Yes        |      Yes        |     Yes         |     Yes         |     Yes         |
