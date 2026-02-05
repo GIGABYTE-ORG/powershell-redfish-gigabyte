@@ -85,7 +85,7 @@ function get_chassis_inventory
             "Accept" = "application/json"
         }
 
-        $chassis_details = @{}
+        $chassis_details = @()
         # Get ComputerBase resource
         $base_url = "https://$ip/redfish/v1/"
         $response = Invoke-WebRequest -Uri $base_url -Headers $JsonHeader -Method Get -UseBasicParsing 
@@ -123,28 +123,42 @@ function get_chassis_inventory
                     $chassis_inventory.Remove($property)
                 }   
             }     
-            if ($chassis_inventory.Keys -contains "Oem") 
+           if ($chassis_inventory.Keys -contains "Oem") 
             {
-                $hash_table = @{}
-                $chassis_inventory.Oem.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
-
                 $hash_table_oem= @{}
-                $hash_table.Lenovo.psobject.properties | Foreach { $hash_table_oem[$_.Name] = $_.Value }
-                if ($hash_table.Keys -contains "Lenovo")
+                $chassis_inventory.Oem.psobject.properties | Foreach { $hash_table_oem[$_.Name] = $_.Value }
+                
+                if ($hash_table_oem.Keys -contains "Lenovo")
                 {
+                    $hash_table_lenovo = @{}
+                    $hash_table_oem.Lenovo.psobject.properties | Foreach { $hash_table_lenovo[$_.Name] = $_.Value }
                     foreach($property in ("LEDs", "Sensors", "Slots", "@odata.type"))
                     {
-                        if ($hash_table_oem.Keys -contains $property) 
+                        if ($hash_table_lenovo.Keys -contains $property) 
                         {
-                            $hash_table_oem.Remove($property)
+                            $hash_table_lenovo.Remove($property)
                         }
-                        $chassis_inventory.Oem.Lenovo =  $hash_table_oem
+                        $chassis_inventory.Oem.Lenovo =  $hash_table_lenovo
+                    }
+                }
+                if ($hash_table_oem.Keys -contains "Gbt")
+                {
+                    $hash_table_gbt = @{}
+                    $hash_table_oem.Gbt.psobject.properties | Foreach { $hash_table_gbt[$_.Name] = $_.Value }
+                    foreach($property in ("LEDs", "Sensors", "Slots", "@odata.type")) #TODO
+                    {
+                        if ($hash_table_gbt.Keys -contains $property) 
+                        {
+                            $hash_table_gbt.Remove($property)
+                        }
+                        $chassis_inventory.Oem.Gbt =  $hash_table_gbt
                     }
                 }
             }
             $chassis_details += $chassis_inventory
-            ConvertOutputHashTableToObject $chassis_details | ConvertTo-Json -Depth 5 
         }
+        $chassis_details_array | Foreach { ConvertOutputHashTableToObject $_ }
+
     }
     catch
     {
