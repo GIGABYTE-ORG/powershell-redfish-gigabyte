@@ -134,11 +134,11 @@ function get_fw_inventory
             }
 
 
-            $firmware = @{}
-            $fw_name = $firmware_x_url -split "/"
-            $firmware[$fw_name[7]] = $fw
+            #$firmware = @{}
+            #$fw_name = $firmware_x_url -split "/"
+            #$firmware[$fw_name[7]] = $fw
             # Output result
-            ConvertOutputHashTableToObject $firmware | ConvertTo-Json -Depth 5
+            ConvertOutputHashTableToObject $fw
         }
     }
     catch
