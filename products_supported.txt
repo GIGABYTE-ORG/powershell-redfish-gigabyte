@@ -15,7 +15,6 @@
 |                    | get_system_inventory.psm1                  |        *Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_chassis_inventory.psm1                 |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_temperatures_inventory.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | lenovo_get_cpu_inventory.psm1              |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_volt_inventory.psm1                    |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | Power Control      | get_power_state.psm1                       |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
@@ -141,6 +140,8 @@
 |                    | get_schema.psm1                            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | set_system_name.psm1                       |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
+
+|                    | lenovo_get_cpu_inventory.psm1              |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 
 *1: After enabling user, may request changing password for first login
 *2: Not supported for SN550 (V2), SN850 (V2), SD530, SD650 (V2), SD650-N (V2), SD650 (V3), SD650-I (V3), SD665 (V3), SD550 (V3), SD530 (V3).
