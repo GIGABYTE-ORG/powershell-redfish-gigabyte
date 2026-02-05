@@ -120,9 +120,9 @@ function get_system_inventory
                 }
             }
             
-            $hash_table_oem = @{}
             if ($hash_table.Keys -contains 'Oem')
             {
+                $hash_table_oem = @{}
                 $hash_table.Oem.psobject.properties | Foreach { $hash_table_oem[$_.Name] = $_.Value }
                 if ($hash_table_oem.Keys -contains 'Lenovo') 
                 {
