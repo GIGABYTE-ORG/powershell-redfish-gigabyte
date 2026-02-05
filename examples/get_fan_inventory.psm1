@@ -155,7 +155,8 @@ function get_fan_inventory
                     }
                 }
                 # Output result
-                $thermal_fans_info | ConvertTo-Json -Depth 10
+                #$thermal_fans_info | ConvertTo-Json -Depth 10
+                ConvertOutputHashTableToObject $thermal_fans_info
             }
         }        
     }
