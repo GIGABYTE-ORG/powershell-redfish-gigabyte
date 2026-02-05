@@ -24,7 +24,6 @@
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | Event Log          | get_system_log.psm1                        |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | clear_system_log.psm1                      |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | lenovo_export_ffdc_data.psm1               |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | Event subscription | get_event_subscriptions.psm1               |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | add_event_subscriptions.psm1               |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
@@ -142,6 +141,7 @@
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 
 |                    | lenovo_get_cpu_inventory.psm1              |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | lenovo_export_ffdc_data.psm1               |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 
 *1: After enabling user, may request changing password for first login
 *2: Not supported for SN550 (V2), SN850 (V2), SD530, SD650 (V2), SD650-N (V2), SD650 (V3), SD650-I (V3), SD665 (V3), SD550 (V3), SD530 (V3).
