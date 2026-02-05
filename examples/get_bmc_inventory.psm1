@@ -201,7 +201,8 @@ function get_bmc_inventory
 
             # Output result
             $bmc_details = $ht_bmc_info
-            $bmc_details | ConvertTo-Json -Depth 10
+            #$bmc_details | ConvertTo-Json -Depth 10
+            ConvertOutputHashTableToObject $bmc_details
         }
         
     }
