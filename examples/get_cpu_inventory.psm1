@@ -130,7 +130,7 @@ function get_cpu_inventory
                 }
                 
                 # Output result
-                ConvertOutputHashTableToObject $ht_cpu_info | ConvertTo-Json -Depth 5
+                ConvertOutputHashTableToObject $ht_cpu_info 
             }
         }
     }
