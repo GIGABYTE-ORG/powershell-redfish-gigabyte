@@ -111,7 +111,6 @@ function get_system_inventory
             $system_properties = @('Status', 'HostName', 'PowerState', 'Model', 'Manufacturer', 'SystemType',
                       'PartNumber', 'SerialNumber', 'AssetTag', 'ServiceTag', 'UUID', 'SKU',
                       'BiosVersion', 'ProcessorSummary', 'MemorySummary', 'TrustedModules')
-            $lenovo_oem_properties = @('FrontPanelUSB', 'SystemStatus', 'NumberOfReboots', 'TotalPowerOnHours')
             foreach ($system_property in $system_properties)
             {
                 if($hash_table.Keys -contains $system_property)
@@ -128,6 +127,7 @@ function get_system_inventory
                 {
                     $hash_table_lenovo = @{}
                     $hash_table_oem.Lenovo.psobject.properties | Foreach { $hash_table_lenovo[$_.Name] = $_.Value }
+                    $lenovo_oem_properties = @('FrontPanelUSB', 'SystemStatus', 'NumberOfReboots', 'TotalPowerOnHours')
                     $system['Oem'] = @{'Lenovo' = @{}}
                     foreach ($oem_property in $lenovo_oem_properties)
                     {
