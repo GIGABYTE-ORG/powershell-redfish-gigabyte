@@ -124,6 +124,10 @@ function get_fw_inventory
             $fw["Name"] = $hash_table.Name
             $fw["Version"] = $hash_table.Version
             $fw["Description"] = $hash_table.Description
+            $fw["Updateable"] = $hash_table.Updateable
+            $fw["WriteProtected"] = $hash_table.WriteProtected
+            $fw["@odata.etag"] = $hash_table."@odata.etag"
+
             if($hash_table.Keys -contains "SoftwareId")
             {
                 $fw["SoftwareId"] = $hash_table.SoftwareId
