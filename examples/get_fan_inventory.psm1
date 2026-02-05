@@ -117,7 +117,7 @@ function get_fan_inventory
                     $fans__x_response = Invoke-WebRequest -Uri $fans_x_url -Headers $JsonHeader -Method Get -UseBasicParsing
                     $fans_x_converted_object = $fans__x_response.Content | ConvertFrom-Json
 
-                    $speedpercent_url = "https://$ip" + $fans_x_converted_object.SpeedPercent.DataSourceUri
+                    $speedpercent_url = "https://$ip" + $fans_x_converted_object.SpeedPercent."@odata.id"
                     $response = Invoke-WebRequest -Uri $speedpercent_url -Headers $JsonHeader -Method Get -UseBasicParsing
                     $speedpercent_converted_object = $response.Content | ConvertFrom-Json
 
