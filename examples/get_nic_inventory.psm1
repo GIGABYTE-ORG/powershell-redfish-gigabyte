@@ -273,7 +273,7 @@ function get_nic_inventory
                 }
             }  
         }
-        nic_details | foreach { ConvertOutputHashTableToObject $_ }
+        $nic_details | foreach { ConvertOutputHashTableToObject $_ }
 
     }
     catch
