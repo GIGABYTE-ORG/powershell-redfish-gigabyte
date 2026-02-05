@@ -85,7 +85,6 @@ function get_chassis_inventory
             "Accept" = "application/json"
         }
 
-        $chassis_details = @()
         # Get ComputerBase resource
         $base_url = "https://$ip/redfish/v1/"
         $response = Invoke-WebRequest -Uri $base_url -Headers $JsonHeader -Method Get -UseBasicParsing 
@@ -155,9 +154,9 @@ function get_chassis_inventory
                     }
                 }
             }
-            $chassis_details += $chassis_inventory
+            ConvertOutputHashTableToObject $chassis_inventory
         }
-        $chassis_details_array | Foreach { ConvertOutputHashTableToObject $_ }
+        
 
     }
     catch
