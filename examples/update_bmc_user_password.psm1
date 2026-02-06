@@ -51,9 +51,9 @@ function update_bmc_user_password
         [string]$username="",
         [Parameter(Mandatory=$False)]
         [string]$password="",
-        [Parameter(Mandatory=$False)]
+        [Parameter(Mandatory=$True)]
         [string]$userid="",
-        [Parameter(Mandatory=$False)]
+        [Parameter(Mandatory=$True)]
         [string]$password_value="",
         [Parameter(Mandatory=$False)]
         [string]$config_file="config.ini"
