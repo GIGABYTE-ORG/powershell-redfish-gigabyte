@@ -25,7 +25,7 @@
 ###
 Import-module $PSScriptRoot\lenovo_utils.psm1
 
-function lenovo_get_sensors
+function get_sensor_inventory
 {
     <#
    .Synopsis
@@ -37,7 +37,7 @@ function lenovo_get_sensors
     - password: Pass in BMC username password
     - config_file: Pass in configuration file path, default configuration file is config.ini
    .EXAMPLE
-    lenovo_get_sensors -ip 10.10.10.10 -username USERID -password PASSW0RD 
+    get_sensor_inventory -ip 10.10.10.10 -username USERID -password PASSW0RD 
    #>
    
     param(
