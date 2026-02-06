@@ -116,7 +116,38 @@ function set_chassis_indicator_led
         {
             # Get chassis url from the chassis url collection
             $uri_address_chassis = "https://$ip"+$chassis_url_string
-
+            <#
+                "@odata.id": "/redfish/v1/Chassis/1",
+                "@odata.etag": "W/\"1769602549\"",
+                "IndicatorLED": "Off",
+                "IndicatorLED@Redfish.AllowableValues": [
+                    "Lit",
+                    "Blinking",
+                    "Off"
+                ],
+            #>
+            $response_IndicatorLED = Invoke-WebRequest -Uri $uri_address_chassis -Headers $JsonHeader -Method Get -UseBasicParsing
+            
+            $converted_object_IndicatorLED = $response_IndicatorLED.Content | ConvertFrom-Json
+            $ht_IndicatorLED = @{}
+            $converted_object_IndicatorLED.psobject.properties | Foreach { $ht_IndicatorLED[$_.Name] = $_.Value }
+            if($chassis_url_collection.Length -gt 1 -and $ht_IndicatorLED.keys -notcontains 'IndicatorLED')
+            {
+                continue
+            }
+            $ht2 = @{}
+            $ht_IndicatorLED."Links".psobject.properties | Foreach { $ht2[$_.Name] = $_.Value }
+            if($ht2.keys -contains "ComputerSystems")
+            {
+                $indicator_status = @{}
+                #$IndicatorLED = $ht_IndicatorLED."IndicatorLED"
+                $indicator_status["@odata.id"] = $ht_IndicatorLED."@odata.id"
+                $indicator_status["IndicatorLED"] = $ht_IndicatorLED."IndicatorLED"
+                $indicator_status["@odata.etag"] = $ht_IndicatorLED."@odata.etag"
+                 
+            }  
+            #Json Header 加入 { "If-Match" = @odata.etag }
+            $JsonHeader["If-Match"]=$ht_IndicatorLED."@odata.etag"
             # Build request body and send requests to set LED status
             $body = @{"IndicatorLED"=$led_status}
             $json_body = $body | convertto-json
@@ -146,7 +177,7 @@ function set_chassis_indicator_led
                 return $False 
             }
             Write-Host
-            [String]::Format("- PASS, statuscode {0} returned successfully to set led {1}",$response.StatusCode, $led_status)
+            [String]::Format("- PASS, statuscode {0} returned successfully to set led {1}.<{2}>",$response.StatusCode, $led_status,$ht_IndicatorLED."@odata.id")
             return $True
         }
     }
