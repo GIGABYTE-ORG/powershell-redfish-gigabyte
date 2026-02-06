@@ -8,8 +8,8 @@
 |                    | get_fan_inventory.psm1                     |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_memory_inventory.psm1                  |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_nic_inventory.psm1                     |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | get_pci_inventory.psm1                     |        *Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | get_psu_inventory.psm1                     |        *Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | get_pci_inventory.psm1                     |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | get_psu_inventory.psm1                     |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_power_redundancy.psm1                  |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_storage_inventory.psm1                 |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_system_inventory.psm1                  |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
@@ -29,9 +29,6 @@
 |                    | add_event_subscriptions.psm1               |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | del_event_subscriptions.psm1               |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | send_test_event.psm1                       |        Yes         |     Yes        |     Yes         |     NO          |     NO          |     Yes         | 
-|                    | lenovo_add_alert_recipient.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | lenovo_del_alert_recipient.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | lenovo_get_alert_recipients.psm1           |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | BIOS settings      | get_all_bios_attributes.psm1               |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_bios_attribute.psm1                    |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
@@ -142,6 +139,9 @@
 
 |                    | lenovo_get_cpu_inventory.psm1              |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | lenovo_export_ffdc_data.psm1               |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | lenovo_add_alert_recipient.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | lenovo_del_alert_recipient.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | lenovo_get_alert_recipients.psm1           |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 
 *1: After enabling user, may request changing password for first login
 *2: Not supported for SN550 (V2), SN850 (V2), SD530, SD650 (V2), SD650-N (V2), SD650 (V3), SD650-I (V3), SD665 (V3), SD550 (V3), SD530 (V3).
