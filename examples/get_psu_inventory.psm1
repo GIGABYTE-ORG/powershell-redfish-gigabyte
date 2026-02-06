@@ -123,6 +123,7 @@ function get_psu_inventory
                 $hash_table = @{}
                 $powersubsystemsupply_converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
                 #get powersubsystem supply info
+                $ht_powersubsystemsupply_info_array= @()
                 foreach ($i in $hash_table.Members)
                 {
                     $powersubsystemsupply_x_url = "https://$ip" + $i."@odata.id"
@@ -140,24 +141,27 @@ function get_psu_inventory
                         }
                     }
 
-                    $metrics_url = "https://$ip" + $powersubsystemsupply_x_converted_object.Metrics."@odata.id"
-                    $metrics_response = Invoke-WebRequest -Uri $metrics_url -Headers $JsonHeader -Method Get -UseBasicParsing
-                    $metrics_converted_object = $metrics_response.Content | ConvertFrom-Json
-
-                    $hash_tmp = @{}
-                    $metrics_converted_object.psobject.properties | Foreach { $hash_tmp[$_.Name] = $_.Value }
-                    $ht_metrics_info = @{}
-                    foreach($key in $hash_tmp.Keys)
+                    if ($hash_table_oem.Keys -contains 'Metrics') 
                     {
-                        if($key -notin "@odata.id", "@odata.context", "@odata.type", "@odata.etag")
+                        $metrics_url = "https://$ip" + $powersubsystemsupply_x_converted_object.Metrics."@odata.id"
+                        $metrics_response = Invoke-WebRequest -Uri $metrics_url -Headers $JsonHeader -Method Get -UseBasicParsing
+                        $metrics_converted_object = $metrics_response.Content | ConvertFrom-Json
+    
+                        $hash_tmp = @{}
+                        $metrics_converted_object.psobject.properties | Foreach { $hash_tmp[$_.Name] = $_.Value }
+                        $ht_metrics_info = @{}
+                        foreach($key in $hash_tmp.Keys)
                         {
-                            $ht_metrics_info[$key] = $hash_tmp[$key]
+                            if($key -notin "@odata.id", "@odata.context", "@odata.type", "@odata.etag")
+                            {
+                                $ht_metrics_info[$key] = $hash_tmp[$key]
+                            }
                         }
+                        $ht_powersubsystemsupply_info["Metrics"] = $ht_metrics_info
                     }
-                    $ht_powersubsystemsupply_info["Metrics"] = $ht_metrics_info
-
                     # Output result
-                    ConvertOutputHashTableToObject $ht_powersubsystemsupply_info  | ConvertTo-Json -Depth 5              
+                    #ConvertOutputHashTableToObject $ht_powersubsystemsupply_info  | ConvertTo-Json -Depth 5  
+                    $ht_powersubsystemsupply_info_array+=$ht_powersubsystemsupply_info
                 }
             }
             
@@ -170,6 +174,29 @@ function get_psu_inventory
             $power_supply_list = $power_converted_object.PowerSupplies
 
             # Loop power supply resource in power supply list
+            $ht_power_supply_array= @()
+            <#
+             "PowerSupplies": [
+                    {
+                        "@odata.id": "/redfish/v1/Chassis/Self/Power#/PowerSupplies/0",
+                        "MemberId": "0",
+                        "Name": "PS1_Status",
+                        "RelatedItem@odata.count": 0,
+                        "Status": {
+                            "State": "Absent"
+                        }
+                    },
+                    {
+                        "@odata.id": "/redfish/v1/Chassis/Self/Power#/PowerSupplies/1",
+                        "MemberId": "1",
+                        "Name": "PS2_Status",
+                        "RelatedItem@odata.count": 0,
+                        "Status": {
+                            "State": "Absent"
+                        }
+                    }
+                ],
+            #>
             foreach($power_supply in $power_supply_list)
             {
                 # Get power supply info
@@ -185,8 +212,36 @@ function get_psu_inventory
                 $ht_power_supply["Manufacturer"] = $power_supply.Manufacturer
                 
                 # Output result
-                ConvertOutputHashTableToObject $ht_power_supply | ConvertTo-Json -Depth 5
+                #ConvertOutputHashTableToObject $ht_power_supply | ConvertTo-Json -Depth 5
+                $ht_power_supply_array+=$ht_power_supply 
             }
+            # 合併兩個陣列
+            $outputarray = @()
+            foreach ($item2 in $ht_power_supply_array) {
+                $outputItem = $item2.Clone()
+                
+    
+                # 先從 array1 取得相同名稱的項目
+                $item1 = $ht_powersubsystemsupply_info_array | Where-Object { $_.Name -eq $item2.Name } | Select-Object -First 1
+   
+                # 如果有找到，先加入 array1 的屬性
+                if ($item1) {
+                    foreach ($key in $item1.Keys) {
+                        if (-not $outputItem.ContainsKey($key)) {
+                            $outputItem[$key] = $item1[$key]
+                        }
+                    }
+                }
+    
+                # 再用 array2 的屬性覆蓋或新增（array2 的資料優先）
+                #foreach ($key in $item2.Keys) {
+                #    $outputItem[$key] = $item2[$key]
+                #}
+   
+                $outputarray += $outputItem
+            }
+            #$outputarray.count 
+            $outputarray | Foreach { ConvertOutputHashTableToObject $_ } 
         }
     }
     catch
