@@ -97,6 +97,22 @@ function get_chassis_indicator_led
             {
                 continue
             }
+            <#
+                "IndicatorLED": "Off",
+                "IndicatorLED@Redfish.AllowableValues": [
+                    "Lit",
+                    "Blinking",
+                    "Off"
+                ],
+                "Links": {
+                    "ComputerSystems": [
+                        {
+                            "@odata.id": "/redfish/v1/Systems/Self"
+                        }
+                    ],
+                    "ComputerSystems@odata.count": 1,
+                }
+            #>
             $ht2 = @{}
             $ht_IndicatorLED."Links".psobject.properties | Foreach { $ht2[$_.Name] = $_.Value }
             if($ht2.keys -contains "ComputerSystems")
@@ -104,6 +120,8 @@ function get_chassis_indicator_led
                 $indicator_status = @{}
                 $IndicatorLED = $ht_IndicatorLED."IndicatorLED"
                 $indicator_status["IndicatorLED"] = $IndicatorLED
+                $indicator_status["@odata.id"] = $ht_IndicatorLED."@odata.id"
+                $indicator_status["@odata.etag"] = $ht_IndicatorLED."@odata.etag"
 
                 # Output result
                 #$indicator_status | ConvertTo-Json -Depth 10
