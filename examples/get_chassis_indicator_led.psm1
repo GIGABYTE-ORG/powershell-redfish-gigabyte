@@ -106,7 +106,8 @@ function get_chassis_indicator_led
                 $indicator_status["IndicatorLED"] = $IndicatorLED
 
                 # Output result
-                $indicator_status | ConvertTo-Json -Depth 10
+                #$indicator_status | ConvertTo-Json -Depth 10
+                ConvertOutputHashTableToObject $indicator_status 
             }  
         }
     }
