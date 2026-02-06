@@ -138,6 +138,41 @@ function get_pci_inventory
                 # Get pci resource
                 $pci_device_x_url ="https://$ip" +  $converted_pci_object.Members[$i]."@odata.id"
                 $response_pci_x_device = Invoke-WebRequest -Uri $pci_device_x_url -Headers $JsonHeader -Method Get -UseBasicParsing 
+ <#
+{
+    "@odata.context": "/redfish/v1/$metadata#PCIeDevice.PCIeDevice",
+    "@odata.etag": "W/\"1739219977\"",
+    "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_01_00",
+    "@odata.type": "#PCIeDevice.v1_9_0.PCIeDevice",
+    "Description": "Network Device",
+    "Id": "00_01_00",
+    "Links": {
+        "PCIeFunctions": [
+            {
+                "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_01_00/PCIeFunctions/00_01_00_00"
+            }
+        ],
+        "PCIeFunctions@odata.count": 1
+    },
+    "Manufacturer": "Intel Corporation",
+    "Model": "Wireless 7260",
+    "Name": "Wireless 7260",
+    "PCIeInterface": {
+        "LanesInUse": 1,
+        "MaxLanes": 1,
+        "MaxPCIeType": "Gen1",
+        "PCIeType": "Gen1"
+    },
+    "Slot": {
+        "Lanes": 16,
+        "PCIeType": "Gen5"
+    },
+    "Status": {
+        "Health": "OK",
+        "State": "Enabled"
+    }
+}
+#>
                 $converted_pci_x_object = $response_pci_x_device.Content | ConvertFrom-Json
                 $response_members_url = @{}
                 $converted_pci_x_object.psobject.properties | Foreach { $response_members_url[$_.Name] = $_.Value }
@@ -146,8 +181,8 @@ function get_pci_inventory
                 $response_members_url.PCIeFunctions.psobject.properties | Foreach { $response_efunctions_url[$_.Name] = $_.Value }
                 
                 $response_links_url = @{}
-                $response_members_url.Links.psobject.properties | Foreach { $response_links_url[$_.Name] = $_.Value }
-                $response_member_id = @{}
+                #$response_members_url.Links.psobject.properties | Foreach { $response_links_url[$_.Name] = $_.Value }
+                #$response_member_id = @{}
                 $response_id = $response_efunctions_url['@odata.id']
                 $response_id.psobject.properties | Foreach { $response_member_id[$_.Name] = $_.Value }
                 $properties = @('Id', 'Name', 'Description', 'Status', 'Manufacturer', 'Model', 'DeviceType', 'SerialNumber', 'PartNumber', 'FirmwareVersion', 'SKU')
@@ -202,10 +237,11 @@ function get_pci_inventory
                     $ht_pcidevice['PCIeFunctions'] += $pciefunc
                 }
                 $pci_details += $ht_pcidevice
+                 ConvertOutputHashTableToObject $ht_pcidevice
             }
         }  
-        $pci_details | ConvertTo-Json -Depth 10
-        Write-Host " "
+        #$pci_details | ConvertTo-Json -Depth 10
+        #Write-Host " "
     }
     catch
     {
