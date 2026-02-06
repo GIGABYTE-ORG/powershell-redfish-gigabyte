@@ -143,7 +143,36 @@ function clear_system_log
                 {
                     continue
                 }
-
+<#
+{
+    "@odata.context": "/redfish/v1/$metadata#LogService.LogService",
+    "@odata.etag": "W/\"1769602549\"",
+    "@odata.id": "/redfish/v1/Managers/Self/LogServices/AuditLog",
+    "@odata.type": "#LogService.v1_1_3.LogService",
+    "Actions": {
+        "#LogService.ClearLog": {
+            "target": "/redfish/v1/Managers/Self/LogServices/AuditLog/Actions/LogService.ClearLog"
+            # 沒有出現 @Redfish.ActionInfo,ClearLog 有，但「沒有 ActionInfo」,很多 BMC 出現（尤其 AMI / OpenBMC / 較舊實作）
+        }
+    },
+    "DateTime": "2026-02-06T00:09:21-00:00",
+    "DateTimeLocalOffset": "-00:00",
+    "Description": "Audit log for this manager",
+    "Entries": {
+        "@odata.id": "/redfish/v1/Managers/Self/LogServices/AuditLog/Entries"
+    },
+    "Id": "AuditLog",
+    "LogEntryType": "Event",
+    "MaxNumberOfRecords": 150,
+    "Name": "Audit Log",
+    "OverWritePolicy": "WrapsWhenFull",
+    "ServiceEnabled": true,
+    "Status": {
+        "Health": "OK",
+        "State": "Enabled"
+    }
+}
+#>
                 # Build request body and send requests to clear the system log
                 $body = @{}
                 if($converted_object.Actions.'#LogService.ClearLog'.'@Redfish.ActionInfo')
@@ -159,9 +188,11 @@ function clear_system_log
                            $body = @{$parameter."Name"=$values[0]}
                        }
                    }
-                }else
+                }
+                else
                 {
-                    $body = @{"Action"="LogService.ClearLog"}
+                    #$body = @{"Action"="LogService.ClearLog"}
+                    #$body須為{ }
                 }
                 $json_body = $body | convertto-json
 
@@ -174,7 +205,8 @@ function clear_system_log
                     {
                         Write-Host
                         [String]::Format("- PASS, statuscode {0} returned to successfully clear system log.",$response_clear_log.StatusCode)
-                        return $True
+                        #return $True
+                        continue
                     }
                     elseif ($response_clear_log.StatusCode -eq 202)
                     {
@@ -202,13 +234,13 @@ function clear_system_log
                             if ($task_state -eq "Completed")
                             {
                                 Write-Host
-                                [String]::Format("- PASS, Clear system log successfully. Messages: {0}", $result.msg.Message) 
+                                [String]::Format("- PASS, Clear system log successfully. Messages: {0} {1}", $result.msg.Message,$i.'@odata.id') 
                                 return $True
                             }
                             else
                             {
                                 Write-Host
-                                [String]::Format("Failed to clear system log. Messages: {0}", $result.msg.Message) 
+                                [String]::Format("Failed to clear system log. Messages: {0} {1}", $result.msg.Message,$i.'@odata.id') 
                                 return $False
                             }
                         }
@@ -240,7 +272,8 @@ function clear_system_log
                     return $False
                 }
             }
-        }  
+        }
+        return $True 
     }
     catch
     {
