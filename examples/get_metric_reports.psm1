@@ -24,7 +24,7 @@
 ###
 Import-module $PSScriptRoot\lenovo_utils.psm1
 
-function get_metric_definition_report
+function get_metric_reports
 {
     <#
    .Synopsis
@@ -114,15 +114,13 @@ function get_metric_definition_report
         foreach ($metric_member in $hash_table_metricreports.Members)
         {
             $metric_url = $metric_member.'@odata.id'
-            $metric_list = $metric_url -Split"/"
-
-            $response_metric_url = "https://$ip" + $metric_url
-            $temporary_response = Invoke-WebRequest -Uri $response_metric_url -Headers $JsonHeader -Method Get -UseBasicParsing
+            $metric_url = "https://$ip" + $metric_url
+            $temporary_response = Invoke-WebRequest -Uri $metric_url -Headers $JsonHeader -Method Get -UseBasicParsing
             $temporary_converted_object = $temporary_response.Content | ConvertFrom-Json
             $temporary_hash_table = @{}
             $temporary_converted_object.psobject.properties | Foreach { $temporary_hash_table[$_.Name] = $_.Value }
         
-            $metric_detail = @{}
+            $metric_reports_detail = @{}
             foreach ($property in $temporary_hash_table.keys)
             {
                 if ("Description","@odata.context","@odata.id","@odata.type","@odata.etag", "Links", "Actions", "RelatedItem" -notcontains $property)
@@ -130,9 +128,8 @@ function get_metric_definition_report
                         $metric_detail[$property] = $temporary_hash_table.$property
                     }
             }
-            $metric_reports=@{$metric_list[-1]=$metric_detail}
             # The output MetricReports
-            ConvertOutputHashTableToObject $metric_reports | ConvertTo-Json
+            ConvertOutputHashTableToObject $metric_reports_reports 
         }
     }
     catch
