@@ -134,7 +134,7 @@ function get_metric_definition
             }
             $metric_definitions=@{$metric_list[-1]=$metricdefinition_detail}
             # The output MetricDefinitions
-            ConvertOutputHashTableToObject $metric_definitions | ConvertTo-Json
+            ConvertOutputHashTableToObject $metric_definitions 
         }
 
     }
