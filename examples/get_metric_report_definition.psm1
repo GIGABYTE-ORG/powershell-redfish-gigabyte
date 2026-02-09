@@ -24,7 +24,7 @@
 ###
 Import-module $PSScriptRoot\lenovo_utils.psm1
 
-function get_metric_definition_report
+function get_metric_report_definition
 {
     <#
    .Synopsis
@@ -114,9 +114,8 @@ function get_metric_definition_report
         foreach ($metric_member in $hash_table_metricreportdefinition.Members)
         {  
             $metric_url = $metric_member.'@odata.id'
-            $metric_list = $metric_url -Split"/"
             $metric_url = "https://$ip" + $metric_url
-            $temporary_response = Invoke-WebRequest -Uri $response_metric_url -Headers $JsonHeader -Method Get -UseBasicParsing
+            $temporary_response = Invoke-WebRequest -Uri $metric_url -Headers $JsonHeader -Method Get -UseBasicParsing
             $temporary_converted_object = $temporary_response.Content | ConvertFrom-Json
             $temporary_hash_table = @{}
             $temporary_converted_object.psobject.properties | Foreach { $temporary_hash_table[$_.Name] = $_.Value }
@@ -132,10 +131,9 @@ function get_metric_definition_report
                        
                     }
             }
-            $metricreport_definitions=@{$metric_list[-1]=$metricreportdefinition_detail}
             # The output MetricReportDefinitions
           
-            ConvertOutputHashTableToObject $metricreport_definitions 
+            ConvertOutputHashTableToObject $metricreportdefinition_detail 
         }
     }
     catch
