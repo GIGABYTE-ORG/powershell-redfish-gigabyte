@@ -102,7 +102,7 @@ function get_memory_inventory
             # Get system resource
             $url_address_system = "https://$ip" + $system_url_string
             $response = Invoke-WebRequest -Uri $url_address_system -Headers $JsonHeader -Method Get -UseBasicParsing
-            $converted_object = $response.Content | ConvertFrom-Json
+            $converted_object = $response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
             
             #Get memory resource
             $url_memory = "https://$ip" + $converted_object.Memory."@odata.id"
