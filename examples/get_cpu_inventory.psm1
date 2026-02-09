@@ -104,7 +104,7 @@ function get_cpu_inventory
             # Get processors resource
             $processors_url = "https://$ip" + $converted_object.Processors."@odata.id"      
             $processors_response =   Invoke-WebRequest -Uri $processors_url -Headers $JsonHeader -Method Get -UseBasicParsing
-            $processors_converted_object = $processors_response.Content | ConvertFrom-Json
+            $processors_converted_object = $processors_response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
 
             # Get cpu count
             $cpu_count = $processors_converted_object."Members@odata.count"
