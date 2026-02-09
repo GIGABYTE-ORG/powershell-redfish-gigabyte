@@ -100,14 +100,16 @@
 | FW Update          | get_fw_inventory.psm1                      |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | update_firmware.psm1                       |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
-| Telemetry          | get_metric_definition_report.psm1          |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+| Telemetry          | get_metric_definition.psm1                 |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | get_metric_reportdefinition.psm1           |        Yes         |     Yes        |      Yes        |     Yes         |     Yes         |     Yes         |
+|                    | get_metric_reports.psm1                    |        Yes         |     Yes        |      Yes        |     Yes         |     Yes         |     Yes         |
 |                    | send_test_metric.psm1                      |        Yes         |     Yes        |      Yes        |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | Session            | get_sessions.psm1                          |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | clear_sessions.psm1                        |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | License            | lenovo_bmc_license_delete.psm1             |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | lenovo_bmc_license_export.psm1             |        Yes         |     Yes        |     Yes         |     NO          |     NO          |
+|                    | lenovo_bmc_license_export.psm1             |        Yes         |     Yes        |     Yes         |     NO          |     NO          |     Yes         |
 |                    | lenovo_bmc_license_getinfo.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | lenovo_bmc_license_import.psm1             |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
