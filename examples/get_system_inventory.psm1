@@ -105,12 +105,12 @@ function get_system_inventory
             # Get system resource
             $url_address_system = "https://$ip" + $system_url_string
             $response = Invoke-WebRequest -Uri $url_address_system -Headers $JsonHeader -Method Get -UseBasicParsing
-            $converted_object = $response.Content | ConvertFrom-Json
+            $converted_object = $response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
             $hash_table = @{}
             $converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
             $system_properties = @('Status', 'HostName', 'PowerState', 'Model', 'Manufacturer', 'SystemType',
                       'PartNumber', 'SerialNumber', 'AssetTag', 'ServiceTag', 'UUID', 'SKU',
-                      'BiosVersion', 'ProcessorSummary', 'MemorySummary', 'TrustedModules')
+                      'BiosVersion', 'ProcessorSummary', 'MemorySummary', 'TrustedModules',,'Description','IndicatorLED','Name')
             foreach ($system_property in $system_properties)
             {
                 if($hash_table.Keys -contains $system_property)
