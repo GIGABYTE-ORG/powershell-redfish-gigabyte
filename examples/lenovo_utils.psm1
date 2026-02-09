@@ -587,3 +587,31 @@ function get_chassis_urls
     }
     return $chassis_url_list
 }
+#  fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
+function ConvertFrom-JsonWithDuplicates {
+    param(
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [string]$JsonString,
+        
+        [ValidateSet('First', 'Last')]
+        [string]$Keep = 'Last'
+    )
+    
+    # 使用 System.Web.Extensions（Windows 內建）
+    Add-Type -AssemblyName System.Web.Extensions
+    
+    $serializer = New-Object System.Web.Script.Serialization.JavaScriptSerializer
+    $serializer.MaxJsonLength = [Int32]::MaxValue
+    
+    # JavaScriptSerializer 會自動處理重複鍵名（保留最後一個）
+    $dict = $serializer.DeserializeObject($JsonString)
+    
+    # 轉換為 PSCustomObject
+    $result = New-Object PSObject
+    
+    foreach ($key in $dict.Keys) {
+        $result | Add-Member -MemberType NoteProperty -Name $key -Value $dict[$key]
+    }
+    
+    return $result
+}
