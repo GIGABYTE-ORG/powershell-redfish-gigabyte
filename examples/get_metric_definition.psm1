@@ -114,8 +114,6 @@ function get_metric_definition
         foreach ($metric_member in $hash_table_metricdefinition.Members)
         {  
             $metric_url = $metric_member.'@odata.id'
-            $metric_list = $metric_url -Split"/"
-
             $metric_url = "https://$ip" + $metric_url
             $temporary_response = Invoke-WebRequest -Uri $metric_url -Headers $JsonHeader -Method Get -UseBasicParsing
             $temporary_converted_object = $temporary_response.Content | ConvertFrom-Json
@@ -129,14 +127,11 @@ function get_metric_definition
                 if ("Description","@odata.context","@odata.id","@odata.type","@odata.etag", "Links", "Actions", "RelatedItem" -notcontains $property)
                     {
                         $metricdefinition_detail[$property] = $temporary_hash_table.$property
-                       
                     }
             }
-            $metric_definitions=@{$metric_list[-1]=$metricdefinition_detail}
             # The output MetricDefinitions
-            ConvertOutputHashTableToObject $metric_definitions 
+            ConvertOutputHashTableToObject $metricdefinition_detail 
         }
-
     }
     catch
     {
