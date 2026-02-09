@@ -91,69 +91,98 @@ function get_metric_definition_report
         $response_base_url = @{}
         $converted_object.psobject.properties | Foreach { $response_base_url[$_.Name] = $_.Value }
         
-        # Get response_telemetry_service_url
+        # Get telemetry_service_url
         if ($response_base_url.keys -contains 'TelemetryService')
         {
             $telemetry_service_url = $response_base_url.TelemetryService.'@odata.id'
         }
-        $response_telemetry_service_url = "https://$ip" + $telemetry_service_url
-        $response = Invoke-WebRequest -Uri $response_telemetry_service_url -Headers $JsonHeader -Method Get -UseBasicParsing
+        $telemetry_service_url = "https://$ip" + $telemetry_service_url
+        $response = Invoke-WebRequest -Uri $telemetry_service_url -Headers $JsonHeader -Method Get -UseBasicParsing
         $converted_object = $response.Content | ConvertFrom-Json
         $hash_table = @{}
         $converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
        
         # Get MetricDefinition collection
-        $metric_collection_url = $hash_table.MetricDefinitions."@odata.id"
-        $response_metric_collection_url = "https://$ip" + $metric_collection_url
-        $response = Invoke-WebRequest -Uri $response_metric_collection_url -Headers $JsonHeader -Method Get -UseBasicParsing
+        $metricdefinition_collection_url = $hash_table.MetricDefinitions."@odata.id"
+        $metricdefinition_collection_url = "https://$ip" + $metricdefinition_collection_url
+        $response = Invoke-WebRequest -Uri $metricdefinition_collection_url -Headers $JsonHeader -Method Get -UseBasicParsing
         $converted_object = $response.Content | ConvertFrom-Json
-        $hash_table = @{}
-        $converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
+        $hash_table_metricdefinition = @{}
+        $converted_object.psobject.properties | Foreach { $hash_table_metricdefinition[$_.Name] = $_.Value }
 
         # Get each MetricDefinition 
-        foreach ($metric_member in $hash_table.Members)
+        foreach ($metric_member in $hash_table_metricdefinition.Members)
         {  
             $metric_url = $metric_member.'@odata.id'
             $metric_list = $metric_url -Split"/"
 
-            $response_metric_url = "https://$ip" + $metric_url
-            $temporary_response = Invoke-WebRequest -Uri $response_metric_url -Headers $JsonHeader -Method Get -UseBasicParsing
+            $metric_url = "https://$ip" + $metric_url
+            $temporary_response = Invoke-WebRequest -Uri $metric_url -Headers $JsonHeader -Method Get -UseBasicParsing
             $temporary_converted_object = $temporary_response.Content | ConvertFrom-Json
             $temporary_hash_table = @{}
             $temporary_converted_object.psobject.properties | Foreach { $temporary_hash_table[$_.Name] = $_.Value }
         
-            $metric_detail = @{}
+            $metricdefinition_detail = @{}
            
             foreach ($property in $temporary_hash_table.Keys)
             {
                 
                 if ("Description","@odata.context","@odata.id","@odata.type","@odata.etag", "Links", "Actions", "RelatedItem" -notcontains $property)
                     {
-                        $metric_detail[$property] = $temporary_hash_table.$property
+                        $metricdefinition_detail[$property] = $temporary_hash_table.$property
                        
                     }
             }
-            $metric_definitions=@{$metric_list[-1]=$metric_detail}
+            $metric_definitions=@{$metric_list[-1]=$metricdefinition_detail}
             # The output MetricDefinitions
             ConvertOutputHashTableToObject $metric_definitions | ConvertTo-Json
         }
+        # Get MetricReportDefinition collection
+        $metricreportdefinition_collection_url = $hash_table.MetricReportDefinitions."@odata.id"
+        $metricreportdefinition_collection_url = "https://$ip" + $metricreportdefinition_collection_url
+        $response = Invoke-WebRequest -Uri $metricreportdefinition_collection_url -Headers $JsonHeader -Method Get -UseBasicParsing
+        $converted_object = $response.Content | ConvertFrom-Json
+        $hash_table_metricreportdefinition = @{}
+        $converted_object.psobject.properties | Foreach { $hash_table_metricreportdefinition[$_.Name] = $_.Value }
+
+        # Get each MetricReportDefinition 
+        foreach ($metric_member in $hash_table_metricreportdefinition.Members)
+        {  
+            $metric_url = $metric_member.'@odata.id'
+            $metric_list = $metric_url -Split"/"
+            $metric_url = "https://$ip" + $metric_url
+            $temporary_response = Invoke-WebRequest -Uri $response_metric_url -Headers $JsonHeader -Method Get -UseBasicParsing
+            $temporary_converted_object = $temporary_response.Content | ConvertFrom-Json
+            $temporary_hash_table = @{}
+            $temporary_converted_object.psobject.properties | Foreach { $temporary_hash_table[$_.Name] = $_.Value }
+        
+            $metricreportdefinition_detail = @{}
+           
+            foreach ($property in $temporary_hash_table.Keys)
+            {
+                
+                if ("Description","@odata.context","@odata.id","@odata.type","@odata.etag", "Links", "Actions", "RelatedItem" -notcontains $property)
+                    {
+                        $metricreportdefinition_detail[$property] = $temporary_hash_table.$property
+                       
+                    }
+            }
+            $metricreport_definitions=@{$metric_list[-1]=$metricreportdefinition_detail}
+            # The output MetricReportDefinitions
+          
+            ConvertOutputHashTableToObject $metricreport_definitions | ConvertTo-Json
+        }
 
         # Get MetricReports collection
-        $response_telemetry_service_url = "https://$ip" + $telemetry_service_url
-        $response_thre = Invoke-WebRequest -Uri $response_telemetry_service_url -Headers $JsonHeader -Method Get -UseBasicParsing
-        $converted_object = $response_thre.Content | ConvertFrom-Json
-        $hash_table = @{}
-        $converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
-        $metric_collection_url = $hash_table.MetricReports.'@odata.id'
-        $response_metric_collection_url = "https://$ip" + $metric_collection_url
-
-        $responset = Invoke-WebRequest -Uri $response_metric_collection_url -Headers $JsonHeader -Method Get -UseBasicParsing
+        $metricreports_collection_url = $hash_table.MetricReports.'@odata.id'
+        $metricreports_collection_url = "https://$ip" + $metricreports_collection_url
+        $responset = Invoke-WebRequest -Uri $metricreports_collection_url -Headers $JsonHeader -Method Get -UseBasicParsing
         $converted_object = $responset.Content | ConvertFrom-Json
-        $hash_table = @{}
-        $converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
+        $hash_table_metricreports = @{}
+        $converted_object.psobject.properties | Foreach { $hash_table_metricreports[$_.Name] = $_.Value }
 
         # Get each MetricReport
-        foreach ($metric_member in $hash_table.Members)
+        foreach ($metric_member in $hash_table_metricreports.Members)
         {
             $metric_url = $metric_member.'@odata.id'
             $metric_list = $metric_url -Split"/"
