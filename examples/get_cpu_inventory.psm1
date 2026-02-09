@@ -123,7 +123,7 @@ function get_cpu_inventory
                 foreach($key in $ht_tmp.Keys)
                 {
                     if($key -in 'Id', 'Name', 'TotalThreads', 'InstructionSet', 'Status', 'ProcessorType', 'ProcessorId', 'ProcessorMemory', 
-                    'ProcessorArchitecture', 'TotalCores', 'TotalEnabledCores', 'Manufacturer', 'MaxSpeedMHz', 'Model', 'Socket', 'TDPWatts')
+                    'ProcessorArchitecture', 'TotalCores', 'TotalEnabledCores', 'Manufacturer', 'MaxSpeedMHz', 'Model', 'Socket', 'TDPWatts', 'OperatingSpeedMHz')
                     {
                         $ht_cpu_info[$key] = $ht_tmp[$key]
                     }
