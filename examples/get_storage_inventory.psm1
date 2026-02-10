@@ -149,7 +149,7 @@ function get_storage_inventory
                                 $storage_controller[$key] = $controller.$key
                             } 
                         }
-                    $storage_list += $storage_controller 
+                    $storage_list += $(ConvertOutputHashTableToObject $storage_controller) 
                 }
 
                 # Get the disk inventory from each of the disk resources
@@ -211,7 +211,7 @@ function get_storage_inventory
                                     $volume_inventory["LinkedDriveIds"] = $drivesIds
                                 }
                             }
-                            $volume_list += $volume_inventory
+                            $volume_list += $(ConvertOutputHashTableToObject $volume_inventory)
                         }
                     }
                     $storage_info["Volumes"] = $volume_list
