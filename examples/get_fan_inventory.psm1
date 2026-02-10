@@ -163,7 +163,6 @@ function get_fan_inventory
                 $thermal_fans_info_array+=$thermal_fans_info
             }
             # 合併兩個陣列
-            $outputarray = @()
             foreach ($item2 in $thermal_fans_info_array) {
                 $outputItem = $item2.Clone()
                 # 先從 array1 取得相同名稱的項目
