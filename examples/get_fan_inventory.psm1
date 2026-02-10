@@ -176,11 +176,8 @@ function get_fan_inventory
                         }
                     }
                 }
-                $outputarray += $outputItem
+                ConvertOutputHashTableToObject $outputItem
             }
-
-            #$outputarray.count 
-            $outputarray | Foreach { ConvertOutputHashTableToObject $_ } 
         }        
     }
     catch
