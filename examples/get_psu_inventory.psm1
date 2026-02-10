@@ -170,50 +170,27 @@ function get_psu_inventory
             $power_url = "https://$ip" + $chassis_converted_object.Power."@odata.id"
             $power_response =   Invoke-WebRequest -Uri $power_url -Headers $JsonHeader -Method Get -UseBasicParsing
             $power_converted_object = $power_response.Content | ConvertFrom-Json
-            # Get power supply list from power resource
-            $power_supply_list = $power_converted_object.PowerSupplies
 
+            
             # Loop power supply resource in power supply list
             $ht_power_supply_array= @()
-            <#
-             "PowerSupplies": [
-                    {
-                        "@odata.id": "/redfish/v1/Chassis/Self/Power#/PowerSupplies/0",
-                        "MemberId": "0",
-                        "Name": "PS1_Status",
-                        "RelatedItem@odata.count": 0,
-                        "Status": {
-                            "State": "Absent"
-                        }
-                    },
-                    {
-                        "@odata.id": "/redfish/v1/Chassis/Self/Power#/PowerSupplies/1",
-                        "MemberId": "1",
-                        "Name": "PS2_Status",
-                        "RelatedItem@odata.count": 0,
-                        "Status": {
-                            "State": "Absent"
-                        }
-                    }
-                ],
-            #>
-            foreach($power_supply in $power_supply_list)
+            # Get power supply list from power resource
+            $list_powersupply_info = $power_converted_object.PowerSupplies
+            foreach($powersupply_info in $list_powersupply_info)
             {
                 # Get power supply info
-                $ht_power_supply = @{}
-                $ht_power_supply["Name"] = $power_supply.Name
-                $ht_power_supply["SerialNumber"] = $power_supply.SerialNumber
-                $ht_power_supply["PartNumber"] = $power_supply.PartNumber
-                $ht_power_supply["FirmwareVersion"] = $power_supply.FirmwareVersion
-                $ht_power_supply["PowerCapacityWatts"] = $power_supply.PowerCapacityWatts
-                $ht_power_supply["PowerSupplyType"] = $power_supply.PowerSupplyType
-                $ht_power_supply["State"] = $power_supply.Status.State
-                $ht_power_supply["Health"] = $power_supply.Status.Health
-                $ht_power_supply["Manufacturer"] = $power_supply.Manufacturer
-                
+                $hash_table = @{}
+                $powersupply_info.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
+                $new_powersupply_info = @{}
+                foreach($key in $hash_table.Keys)
+                {
+                    if($key -notin "Description", "@odata.context","@odata.id",  "@odata.type","@odata.etag", "Links", "Actions", "RelatedItem","Oem","RelatedItem@odata.count") 
+                    {
+                        $new_powersupply_info[$key] = $hash_table[$key]
+                    }
+                }
                 # Output result
-                #ConvertOutputHashTableToObject $ht_power_supply | ConvertTo-Json -Depth 5
-                $ht_power_supply_array+=$ht_power_supply 
+                $ht_power_supply_array+=$new_powersupply_info  
             }
             # 合併兩個陣列
             $outputarray = @()
