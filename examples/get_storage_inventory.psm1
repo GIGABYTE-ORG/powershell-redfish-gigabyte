@@ -171,7 +171,7 @@ function get_storage_inventory
                                 $disk_inventory[$key] = $hash_table2.$key
                             }
                         }
-                        $drive_list += $disk_inventory
+                        $drive_list += $(ConvertOutputHashTableToObject $disk_inventory)
                     }
                     $storage_info["Drives"] = $drive_list
                 }
