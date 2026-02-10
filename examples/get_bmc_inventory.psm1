@@ -184,19 +184,17 @@ function get_bmc_inventory
                     $response_ethernet_x_url = "https://$ip" + $ethernet_x_url
                     $serial_response = Invoke-WebRequest -Uri $response_ethernet_x_url -Headers $JsonHeader -Method Get -UseBasicParsing
                     $response_ethernet_x_data = $serial_response.Content | ConvertFrom-Json
-                    #$hash_table= @{}
-                    #$response_ethernet_x_data.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
-                    #$properties = @('Id', 'Name', 'MACAddress', 'PermanentMACAddress', 'MTUSize', 'FQDN', 'AutoNeg', 'Status', 'InterfaceEnabled', 'SpeedMbps', 'NameServers', 'StaticNameServers', 'DHCPv4', 'DHCPv6', 'IPv4Addresses', 'IPv4StaticAddresses', 'IPv6Addresses', 'IPv6StaticAddresses')
-                    #foreach ($property in $properties) 
-                    #{
-                    #    if($hash_table.Keys -contains $property)
-                    #    {
-                    #        $ethernet_info[$property] = $hash_table.$property
-                    #    }
-                    #}
-                    #$ethernet_info_list += $ethernet_info
-                    $ethernet_info_list += response_ethernet_x
-                    
+                    $hash_table= @{}
+                    $response_ethernet_x_data.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
+                    $properties = @('Id', 'Name', 'MACAddress', 'PermanentMACAddress', 'MTUSize', 'FQDN', 'AutoNeg', 'Status', 'InterfaceEnabled', 'SpeedMbps', 'NameServers', 'StaticNameServers', 'DHCPv4', 'DHCPv6', 'IPv4Addresses', 'IPv4StaticAddresses', 'IPv6Addresses', 'IPv6StaticAddresses')
+                    foreach ($property in $properties) 
+                    {
+                        if($hash_table.Keys -contains $property)
+                        {
+                            $ethernet_info[$property] = $hash_table.$property
+                        }
+                    }
+                    $ethernet_info_list += $(ConvertOutputHashTableToObject $ethernet_info) 
                 }
                 $ht_bmc_info['ethernet_info'] +=  $ethernet_info_list
             }
