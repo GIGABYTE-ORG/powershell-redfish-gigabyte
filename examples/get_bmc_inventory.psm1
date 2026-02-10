@@ -187,14 +187,16 @@ function get_bmc_inventory
                     $hash_table= @{}
                     $response_ethernet_x_data.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
                     $properties = @('Id', 'Name', 'MACAddress', 'PermanentMACAddress', 'MTUSize', 'FQDN', 'AutoNeg', 'Status', 'InterfaceEnabled', 'SpeedMbps', 'NameServers', 'StaticNameServers', 'DHCPv4', 'DHCPv6', 'IPv4Addresses', 'IPv4StaticAddresses', 'IPv6Addresses', 'IPv6StaticAddresses')
-                    foreach ($property in $properties) 
-                    {
-                        if($hash_table.Keys -contains $property)
-                        {
-                            $ethernet_info[$property] = $hash_table.$property
-                        }
-                    }
-                    $ethernet_info_list += $ethernet_info
+                    #foreach ($property in $properties) 
+                    #{
+                    #    if($hash_table.Keys -contains $property)
+                    #    {
+                    #        $ethernet_info[$property] = $hash_table.$property
+                    #    }
+                    #}
+                    #$ethernet_info_list += $ethernet_info
+                    $ethernet_info_list += response_ethernet_x
+                    
                 }
                 $ht_bmc_info['ethernet_info'] +=  $ethernet_info_list
             }
