@@ -101,12 +101,12 @@ function get_volt_inventory
             $ht_links = @{}
             $converted_object.psobject.properties | Foreach { $ht_links[$_.Name] = $_.Value }
 
-            #Get powerl_url resource
-            $thermal_url = "https://$ip" + $converted_object.Power."@odata.id"
-            $response = Invoke-WebRequest -Uri $thermal_url -Headers $JsonHeader -Method Get -UseBasicParsing
+            #Get power_url resource
+            $power_url = "https://$ip" + $converted_object.Power."@odata.id"
+            $response = Invoke-WebRequest -Uri $power_url -Headers $JsonHeader -Method Get -UseBasicParsing
             $converted_object = $response.Content | ConvertFrom-Json
             
-            #get power limit info
+            #get voltage info
             $list_voltages_info = $converted_object.Voltages
             foreach($voltage_info in $list_voltages_info)
             {
@@ -122,7 +122,7 @@ function get_volt_inventory
                     $ht_voltage_info[$key] = $hash_table[$key]
                 }
                 # Output result
-                $ht_voltage_info | ConvertTo-Json -Depth 10
+                ConvertOutputHashTableToObject $ht_voltage_info
             }
         }
         
