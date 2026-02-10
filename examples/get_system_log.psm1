@@ -142,19 +142,35 @@ function get_system_log
                     continue
                 }
                 $temp = [string]$hash_table.Entries
-                $uri_address_log_service_entries = "https://$ip"+($temp.Split("=")[1].Replace("}",""))
-                # Get detail log information from log service's Entries uri
-                $sub_response = Invoke-WebRequest -Uri $uri_address_log_service_entries -Headers $JsonHeader -Method Get -UseBasicParsing
-                # Converting PS Custom Object to hashtable, print logs to the screen
-                $converted_object = $sub_response.Content | ConvertFrom-Json
-                $hash_table2 = @{}
-                $converted_object.psobject.properties | Foreach { $hash_table2[$_.Name] = $_.Value }
-                if ($hash_table2.'Members@odata.count' -eq 0) 
-                {
-                    continue
-                }
-                # Output result
-                $hash_table2.Members | Foreach {  $_ } 
+                $uri_address_log_service_entries = $temp.Split("=")[1].Replace("}","")
+                
+                do {
+                    $uri_address_log_service_entries = "https://$ip"+$uri_address_log_service_entries
+                    #$uri_address_log_service_entries
+                    # Get detail log information from log service's Entries uri
+                    $sub_response = Invoke-WebRequest -Uri $uri_address_log_service_entries -Headers $JsonHeader -Method Get -UseBasicParsing
+                    # Converting PS Custom Object to hashtable, print logs to the screen
+                    $converted_object = $sub_response.Content | ConvertFrom-Json
+                    $hash_table2 = @{}
+                    $converted_object.psobject.properties | Foreach { $hash_table2[$_.Name] = $_.Value }
+                    #get log info
+                    foreach($log_info in $hash_table2.Members)
+                    {
+                        $hash_table_log = @{}
+                        $log_info.psobject.properties | Foreach { $hash_table_log[$_.Name] = $_.Value }
+                        $new_log_info = @{}
+                        foreach($key in $hash_table_log.Keys)
+                        {
+                            if($key -notin "@odata.context","@odata.id",  "@odata.type","@odata.etag", "Links", "Actions", "RelatedItem","Oem","RelatedItem@odata.count") 
+                            {
+                                $new_log_info[$key] = $hash_table_log[$key]
+                            }
+                        }
+                        # Output result
+                        ConvertOutputHashTableToObject $new_log_info
+                    }
+                    $uri_address_log_service_entries=$hash_table2.'Members@odata.nextLink'
+                }while($uri_address_log_service_entries)
             }
         }
     }    
