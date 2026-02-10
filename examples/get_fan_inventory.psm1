@@ -127,7 +127,7 @@ function get_fan_inventory
                     $ht_fans_info = @{}
                     foreach($key in $hash_table.Keys)
                     {
-                        if($key -notin "Description", "@odata.context", "@odata.id", "@odata.type","@odata.etag", "Links", "Actions", "RelatedItem")
+                        if($key -notin "Description", "@odata.context", "@odata.id", "@odata.type","@odata.etag", "Links", "Actions", "RelatedItem","Oem","RelatedItem@odata.count")
                         {
                             $ht_fans_info[$key] = $hash_table[$key]
                         }
@@ -152,7 +152,7 @@ function get_fan_inventory
                 $thermal_fans_info = @{}
                 foreach($key in $hash_table.Keys)
                 {
-                    if($key -notin "Description", "@odata.context", "@odata.id", "@odata.type","@odata.etag", "Links", "Actions", "RelatedItem")
+                    if($key -notin "Description", "@odata.context", "@odata.id", "@odata.type","@odata.etag", "Links", "Actions", "RelatedItem","Oem","RelatedItem@odata.count")
                     {
                         $thermal_fans_info[$key] = $hash_table[$key]
                     }
