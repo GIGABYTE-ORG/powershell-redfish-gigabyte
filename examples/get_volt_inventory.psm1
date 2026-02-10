@@ -112,17 +112,17 @@ function get_volt_inventory
             {
                 $hash_table = @{}
                 $voltage_info.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
-                $ht_voltage_info = @{}
+                $power_voltage_info = @{}
                 foreach($key in $hash_table.Keys)
                 {
-                    if($key -eq "RelatedItem" -or  $key -eq "@odata.id")
+                    if($key -notin "Description", "@odata.context","@odata.id",  "@odata.type","@odata.etag", "Links", "Actions", "RelatedItem","Oem","RelatedItem@odata.count") 
                     {
-                        continue
+                        $ht_voltage_info[$key] = $hash_table[$key]
                     }
-                    $ht_voltage_info[$key] = $hash_table[$key]
                 }
                 # Output result
-                ConvertOutputHashTableToObject $ht_voltage_info
+                #$ht_voltage_info | ConvertTo-Json -Depth 10
+                ConvertOutputHashTableToObject $power_voltage_info
             }
         }
         
