@@ -228,7 +228,36 @@ function get_system_inventory
                 #ConvertOutputHashTableToObject $ht_cpu_info 
                  $system['Processors'] +=  ConvertOutputHashTableToObject $ht_cpu_info 
             }
-           
+            #Get memory resource
+            $url_memory = "https://$ip" + $converted_object.Memory."@odata.id"
+            $response = Invoke-WebRequest -Uri $url_memory -Headers $JsonHeader -Method Get -UseBasicParsing
+            $converted_object = $response.Content | ConvertFrom-Json
+            
+            #Get memory info
+            $system['Memory']=@()
+            $list_memory = $converted_object.Members
+            foreach($memory_info in $list_memory)
+            {
+                $ht_memory_info = @{}
+                $url_sub_memory = "https://$ip" + $memory_info."@odata.id"
+                $response = Invoke-WebRequest -Uri $url_sub_memory -Headers $JsonHeader -Method Get -UseBasicParsing
+                $converted_object = $response.Content | ConvertFrom-Json
+                
+                $hash_table = @{}
+                $converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
+                foreach($key in $hash_table.Keys)
+                {
+                    if($key -eq "Links" -or  $key -eq "Oem" -or $key -like "@*")
+                    {
+                        continue
+                    }
+                    $ht_memory_info[$key] = $hash_table[$key]
+                }
+                
+                # Output result
+                $system['Memory'] +=ConvertOutputHashTableToObject $ht_memory_info
+            }
+            
             # Output result
             #$system['EtherNetInterfaces'] = $list_ethernetinterface
             #$system  | ConvertTo-Json -Depth 10
