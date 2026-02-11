@@ -166,14 +166,14 @@ function get_system_inventory
                 }
             }
 
-
             # Get System EtherNetInterfaces resources
             $nics_url = "https://$ip" + $converted_object.EthernetInterfaces."@odata.id"
             $nics_response = Invoke-WebRequest -Uri $nics_url -Headers $JsonHeader -Method Get -UseBasicParsing
             $converted_nics = $nics_response.Content | ConvertFrom-Json
+
             $nics_count = $converted_nics."Members@odata.count"
-            $system['EtherNetInterfaces'] = @()
-            #$list_ethernetinterface = @()
+            $system['EtherNetInterfaces']=@()
+            $list_ethernetinterface = @()
             # Loop nic resource in EtherNetInterfaces resource
             for($num = 0;$num -lt $nics_count;$num ++)
             {
@@ -183,7 +183,7 @@ function get_system_inventory
                 $nic_x_url = "https://$ip" + $converted_nics.Members[$num]."@odata.id"
                 $nic_x_response = Invoke-WebRequest -Uri $nic_x_url -Headers $JsonHeader -Method Get -UseBasicParsing
                 $convert_nic_x = $nic_x_response.Content | ConvertFrom-Json
-
+                #$convert_nic_x
                 # Psobject
                 $ht_ethernetinterface["Id"] = $convert_nic_x.Id
                 $ht_ethernetinterface["Name"] = $convert_nic_x.Name
@@ -192,8 +192,10 @@ function get_system_inventory
                 $ht_ethernetinterface["EthernetInterfaceType"] = $convert_nic_x.EthernetInterfaceType
                 #$object = [pscustomobject]$ht_ethernetinterface
                 #$list_ethernetinterface += $object.PSObject.ToString()
-                $system['EtherNetInterfaces'] += ConvertOutputHashTableToObject $ht_ethernetinterface                
+                $list_ethernetinterface += ConvertOutputHashTableToObject $ht_ethernetinterface
             }
+            $system['EtherNetInterfaces'] = $list_ethernetinterface
+
             # Get processors resource
             $processors_url = "https://$ip" + $converted_object.Processors."@odata.id"      
             $processors_response =   Invoke-WebRequest -Uri $processors_url -Headers $JsonHeader -Method Get -UseBasicParsing
@@ -202,7 +204,7 @@ function get_system_inventory
 
             # Get cpu count
             $cpu_count = $processors_converted_object."Members@odata.count"
-            $system['Processors']=@()
+            $processors_list=@()
             # Loop all cpu resource instance in processor resource
             for($i = 0;$i -lt $cpu_count ;$i++)
             {
@@ -226,25 +228,27 @@ function get_system_inventory
                 
                 # Output result
                 #ConvertOutputHashTableToObject $ht_cpu_info 
-                 $system['Processors'] +=  ConvertOutputHashTableToObject $ht_cpu_info 
+                $processors_list +=  ConvertOutputHashTableToObject $ht_cpu_info 
             }
+            $system['Processors'] +=  ConvertOutputHashTableToObject $ht_cpu_info 
+
             #Get memory resource
             $url_memory = "https://$ip" + $converted_object.Memory."@odata.id"
             $response = Invoke-WebRequest -Uri $url_memory -Headers $JsonHeader -Method Get -UseBasicParsing
-            $converted_object = $response.Content | ConvertFrom-Json
+            $memory_converted_object = $response.Content | ConvertFrom-Json
             
             #Get memory info
-            $system['Memory']=@()
-            $list_memory = $converted_object.Members
+            $memory_list=@()
+            $list_memory = $memory_converted_object.Members
             foreach($memory_info in $list_memory)
             {
                 $ht_memory_info = @{}
                 $url_sub_memory = "https://$ip" + $memory_info."@odata.id"
                 $response = Invoke-WebRequest -Uri $url_sub_memory -Headers $JsonHeader -Method Get -UseBasicParsing
-                $converted_object = $response.Content | ConvertFrom-Json
+                $memory_x_converted_object = $response.Content | ConvertFrom-Json
                 
                 $hash_table = @{}
-                $converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
+                $memory_x_converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
                 foreach($key in $hash_table.Keys)
                 {
                     if($key -eq "Links" -or  $key -eq "Oem" -or $key -like "@*")
@@ -255,13 +259,141 @@ function get_system_inventory
                 }
                 
                 # Output result
-                $system['Memory'] +=ConvertOutputHashTableToObject $ht_memory_info
+                $memory_list +=ConvertOutputHashTableToObject $ht_memory_info
             }
+            $system['Memory']=$memory_list
+            # Get the storage url from the computer system resource
+            #if($hash_table.keys -contains "Storage")
+            #{
+            #    $uri_storage = "https://$ip" + $converted_object.Storage.'@odata.id'
+            #}
+            #else
+            #{
+            #    $uri_storage = "https://$ip" + $converted_object.SimpleStorage.'@odata.id'
+            #}
+
+            $uri_storage = "https://$ip" + $converted_object.Storage.'@odata.id'
+            $uri_storage
+ 
+            # Get the storage information form the storage resource
+            $response = Invoke-WebRequest -Uri $uri_storage -Headers $JsonHeader -Method Get -UseBasicParsing
+            $storage_converted_object = $response.Content | ConvertFrom-Json
+ 
+            $storage_list = @()
+            foreach($storage_url in $storage_converted_object.Members)
+            {
+                $storage_x_url = "https://$ip" + $storage_url.'@odata.id'
+                #$storage_x_url
+                $response = Invoke-WebRequest -Uri $storage_x_url -Headers $JsonHeader -Method Get -UseBasicParsing
+                $storage_x_converted_object = $response.Content | ConvertFrom-Json
+                $hash_table = @{}
+                $storage_x_converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
             
+                # Build a empty hashtable store storage information
+                $storage_info = @{}
+                $storage_info["Storage_id"] = $hash_table.Id
+                $storage_info["Name"] = $hash_table.Name
+                $storagecontroller_list = @()
+
+                # Get the storage controllers instances resources from each of the storage resources
+                if($hash_table.keys -contains "Drives")
+                {
+                    foreach($controller in $hash_table.StorageControllers)
+                    {
+                        $hash_table1 = @{}
+                        $controller.psobject.properties | Foreach { $hash_table1[$_.Name] = $_.Value }
+                        $storage_controller = @{}
+                        foreach($key in $hash_table1.Keys)
+                            {
+                                if(('@odata.id', 'Links') -notcontains $key)
+                                {
+                                    $storage_controller[$key] = $controller.$key
+                                } 
+                            }
+                        $storagecontroller_list += ConvertOutputHashTableToObject $storage_controller 
+                    }
+                    $storage_info["StorageControllers"] = $storagecontroller_list
+                }
+
+
+                # Get the disk inventory from each of the disk resources
+                $drive_list = @()
+                if($hash_table.keys -contains "Drives")
+                {
+                    foreach($disk in $hash_table.Drives)
+                    {
+                        $disk_inventory = @{}
+                        $disk_url = "https://$ip" + $disk.'@odata.id'
+                        $response = Invoke-WebRequest -Uri $disk_url -Headers $JsonHeader -Method Get -UseBasicParsing
+                        $disk_x_converted_object = $response.Content | ConvertFrom-Json
+                        $hash_table2 = @{}
+                        $disk_x_converted_object.psobject.properties | Foreach { $hash_table2[$_.Name] = $_.Value }
+                        foreach($key in $hash_table2.Keys)
+                        {
+                            if('Description','@odata.context','@odata.id','@odata.type','@odata.etag', 'Links' -notcontains $key)
+                            {
+                                $disk_inventory[$key] = $hash_table2.$key
+                            }
+                        }
+                        $drive_list += ConvertOutputHashTableToObject $disk_inventory
+                    }
+                    $storage_info["Drives"] = $drive_list
+                }
+
+
+                # Get the volume inventory from each of the disk resources
+                $volume_list = @()
+                if($hash_table.keys -contains "Volumes")
+                {
+                    foreach($volume in $hash_table.Volumes)
+                    {
+                        $volumes_url = "https://$ip" + $volume.'@odata.id'
+                        $response = Invoke-WebRequest -Uri $volumes_url -Headers $JsonHeader -Method Get -UseBasicParsing
+                        $volumes_converted_object = $response.Content | ConvertFrom-Json
+                        $hash_table3 = @{}
+                        $volumes_converted_object.psobject.properties | Foreach { $hash_table3[$_.Name] = $_.Value }
+                        foreach($volume_x_url in $volumes_converted_object.Members)
+                        {
+                            $volume_x_url = "https://$ip" + $volume_x_url.'@odata.id'
+                            $response = Invoke-WebRequest -Uri $volume_x_url -Headers $JsonHeader -Method Get -UseBasicParsing
+                            $volume_x_converted_object = $response.Content | ConvertFrom-Json
+                            $hash_table4 = @{}
+                            $volume_x_converted_object.psobject.properties | Foreach { $hash_table4[$_.Name] = $_.Value }
+                            $volume_inventory = @{}
+                            foreach($key in $hash_table4.Keys)
+                            {
+                                if('Description','@odata.context','@odata.id','@odata.type','@odata.etag', 'Links' -notcontains $key)
+                                {
+                                    $volume_inventory[$key] = $hash_table4.$key
+                                }
+                                
+                                if($key -contains "Links"){
+                                    $drivesIds = @()
+                                    foreach($drive in $converted_object.Links.Drives){
+                                        $drivename = $drive."@odata.id" -split '/'
+                                        $drivesIds += $drivename[8]
+                                    }  
+                                    $volume_inventory["LinkedDriveIds"] = $drivesIds
+                                }
+                                
+                            }
+                           
+                            $volume_list += ConvertOutputHashTableToObject $volume_inventory
+                        }
+                    }
+                    $storage_info["Volumes"] = $volume_list
+                }
+
+                $storage_list += $storage_info 
+
+            }
+            $system['Storage'] = $storage_list
+
             # Output result
-            #$system['EtherNetInterfaces'] = $list_ethernetinterface
+           
             #$system  | ConvertTo-Json -Depth 10
             ConvertOutputHashTableToObject $system
+
         }
     }
     catch
