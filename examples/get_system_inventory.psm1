@@ -194,6 +194,40 @@ function get_system_inventory
                 #$list_ethernetinterface += $object.PSObject.ToString()
                 $system['EtherNetInterfaces'] += ConvertOutputHashTableToObject $ht_ethernetinterface                
             }
+            # Get processors resource
+            $processors_url = "https://$ip" + $converted_object.Processors."@odata.id"      
+            $processors_response =   Invoke-WebRequest -Uri $processors_url -Headers $JsonHeader -Method Get -UseBasicParsing
+            $processors_converted_object = $processors_response.Content | ConvertFrom-Json
+
+
+            # Get cpu count
+            $cpu_count = $processors_converted_object."Members@odata.count"
+            $system['Processors']=@()
+            # Loop all cpu resource instance in processor resource
+            for($i = 0;$i -lt $cpu_count ;$i++)
+            {
+                # Get cpu resource
+                $cpu_url = "https://$ip" + $processors_converted_object.Members[$i]."@odata.id"
+                #$cpu_url
+                $cpu_response =   Invoke-WebRequest -Uri $cpu_url -Headers $JsonHeader -Method Get -UseBasicParsing
+                $cpu_converted_object = $cpu_response.Content | ConvertFrom-Json
+                $ht_cpu_info = @{}
+
+                $ht_tmp = @{}
+                $cpu_converted_object.psobject. properties | Foreach{ $ht_tmp[$_.Name] = $_.Value }
+                foreach($key in $ht_tmp.Keys)
+                {
+                    if($key -in 'Id', 'Name', 'TotalThreads', 'InstructionSet', 'Status', 'ProcessorType', 'ProcessorId', 'ProcessorMemory', 
+                    'ProcessorArchitecture', 'TotalCores', 'TotalEnabledCores', 'Manufacturer', 'MaxSpeedMHz', 'Model', 'Socket', 'TDPWatts', 'OperatingSpeedMHz')
+                    {
+                        $ht_cpu_info[$key] = $ht_tmp[$key]
+                    }
+                }
+                
+                # Output result
+                #ConvertOutputHashTableToObject $ht_cpu_info 
+                 $system['Processors'] +=  ConvertOutputHashTableToObject $ht_cpu_info 
+            }
            
             # Output result
             #$system['EtherNetInterfaces'] = $list_ethernetinterface
