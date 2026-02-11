@@ -113,8 +113,8 @@ function get_chassis_inventory
             $chassis_inventory = $ht_chassis_members
 
             # Delete content with only url property
-            foreach($property in ("Links", "@odata.etag", "@odata.id", "@odata.type", "LogServices",
-            "Memory", "NetworkAdapters", "PCIeDevices", "PCIepythonSlots", "Power", "Thermal",
+            foreach($property in ("Links", "@odata.etag", "@odata.id", "@odata.type",,"@odata.context" "LogServices",
+            "Memory", "NetworkAdapters", "PCIeDevices", "PCIepythonSlots", "Power", "Thermal","Fru","PCIeSlots","MediaControllers",
             "Controls", "EnvironmentMetrics", "PowerSubsystem", "Sensors", "ThermalSubsystem"))
             {
                 if($chassis_inventory.Keys -contains $property) 
@@ -144,6 +144,7 @@ function get_chassis_inventory
                 {
                     $hash_table_gbt = @{}
                     $hash_table_oem.Gbt.psobject.properties | Foreach { $hash_table_gbt[$_.Name] = $_.Value }
+                    <# TODO:
                     foreach($property in ("LEDs", "Sensors", "Slots", "@odata.type")) #TODO
                     {
                         if ($hash_table_gbt.Keys -contains $property) 
@@ -152,6 +153,7 @@ function get_chassis_inventory
                         }
                         $chassis_inventory.Oem.Gbt =  $hash_table_gbt
                     }
+                    #>
                 }
             }
             ConvertOutputHashTableToObject $chassis_inventory
