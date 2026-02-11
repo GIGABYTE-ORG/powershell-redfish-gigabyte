@@ -191,10 +191,10 @@ function get_bmc_inventory
                     $properties = @('Id', 'Name', 'MACAddress', 'PermanentMACAddress', 'MTUSize', 'FQDN', 'AutoNeg', 'Status', 'InterfaceEnabled', 'SpeedMbps', 'NameServers', 'StaticNameServers', 'DHCPv4', 'DHCPv6', 'IPv4Addresses', 'IPv4StaticAddresses', 'IPv6Addresses', 'IPv6StaticAddresses')
                     foreach ($property in $properties) 
                     {
-                        if($hash_table.Keys -contains $property)
-                        {
+                        #if($hash_table.Keys -contains $property)
+                        #{
                             $ethernet_info[$property] = $hash_table.$property
-                        }
+                        #}
                     }
                     $ht_bmc_info['EthernetInterfaces'] +=  ConvertOutputHashTableToObject $ethernet_info
                 }
