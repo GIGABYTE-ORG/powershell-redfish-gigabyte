@@ -172,7 +172,8 @@ function get_system_inventory
             $nics_response = Invoke-WebRequest -Uri $nics_url -Headers $JsonHeader -Method Get -UseBasicParsing
             $converted_nics = $nics_response.Content | ConvertFrom-Json
             $nics_count = $converted_nics."Members@odata.count"
-            $list_ethernetinterface = @()
+            $system['EtherNetInterfaces'] = @()
+            #$list_ethernetinterface = @()
             # Loop nic resource in EtherNetInterfaces resource
             for($num = 0;$num -lt $nics_count;$num ++)
             {
@@ -184,13 +185,18 @@ function get_system_inventory
                 $convert_nic_x = $nic_x_response.Content | ConvertFrom-Json
 
                 # Psobject
+                $ht_ethernetinterface["Id"] = $convert_nic_x.Id
+                $ht_ethernetinterface["Name"] = $convert_nic_x.Name
+                $ht_ethernetinterface["UefiDevicePath"] = $convert_nic_x.UefiDevicePath
                 $ht_ethernetinterface["PermanentMACAddress"] = $convert_nic_x.PermanentMACAddress
-                $object = [pscustomobject]$ht_ethernetinterface
-                $list_ethernetinterface += $object.PSObject.ToString()
+                $ht_ethernetinterface["EthernetInterfaceType"] = $convert_nic_x.EthernetInterfaceType
+                #$object = [pscustomobject]$ht_ethernetinterface
+                #$list_ethernetinterface += $object.PSObject.ToString()
+                $system['EtherNetInterfaces'] += ConvertOutputHashTableToObject $ht_ethernetinterface                
             }
            
             # Output result
-            $system['EtherNetInterfaces'] = $list_ethernetinterface
+            #$system['EtherNetInterfaces'] = $list_ethernetinterface
             #$system  | ConvertTo-Json -Depth 10
             ConvertOutputHashTableToObject $system
         }
