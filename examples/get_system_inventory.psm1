@@ -108,9 +108,9 @@ function get_system_inventory
             $converted_object = $response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
             $hash_table = @{}
             $converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
-            $system_properties = @('Status', 'HostName', 'PowerState', 'Model', 'Manufacturer', 'SystemType',
+            $system_properties = @('Status', 'HostName', 'Model', 'Manufacturer', 'SystemType',
                       'PartNumber', 'SerialNumber', 'AssetTag', 'ServiceTag', 'UUID', 'SKU',
-                      'BiosVersion', 'ProcessorSummary', 'MemorySummary', 'TrustedModules',,'Description','IndicatorLED','Name')
+                      'BiosVersion', 'ProcessorSummary', 'MemorySummary', 'TrustedModules','Description','IndicatorLED','Name','PowerRestorePolicy', 'PowerState')
             foreach ($system_property in $system_properties)
             {
                 if($hash_table.Keys -contains $system_property)
