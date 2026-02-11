@@ -273,8 +273,7 @@ function get_system_inventory
             #}
 
             $uri_storage = "https://$ip" + $converted_object.Storage.'@odata.id'
-            $uri_storage
- 
+
             # Get the storage information form the storage resource
             $response = Invoke-WebRequest -Uri $uri_storage -Headers $JsonHeader -Method Get -UseBasicParsing
             $storage_converted_object = $response.Content | ConvertFrom-Json
