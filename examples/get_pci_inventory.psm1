@@ -111,7 +111,7 @@ function get_pci_inventory
         }
         $pci_details = @()
         # Loop all System resource instance in $chassis_url_collection
-        foreach($chassis_url_string in $chassis_url_collection)
+       foreach($chassis_url_string in $chassis_url_collection)
         {
             # Get system resource
             $response = Invoke-WebRequest -Uri $chassis_url_string -Headers $JsonHeader -Method Get -UseBasicParsing
@@ -122,22 +122,86 @@ function get_pci_inventory
                 break
             }
 
-            # Get PCIeDevices resource 
-            $pci_devices_url = "https://$ip" + $converted_object.PCIeDevices."@odata.id"
-            $response = Invoke-WebRequest -Uri $pci_devices_url -Headers $JsonHeader -Method Get -UseBasicParsing
-            $converted_pci_object = $response.Content | ConvertFrom-Json
+            $pci_devices_url = $converted_object.PCIeDevices."@odata.id"
+                
+            do {
+                # Get PCIeDevices resource 
+                $pci_devices_url = "https://$ip" + $pci_devices_url
+                #$pci_devices_url #https://10.1.9.129/redfish/v1/Chassis/Self/PCIeDevices
+                $response = Invoke-WebRequest -Uri $pci_devices_url -Headers $JsonHeader -Method Get -UseBasicParsing
+                $converted_pci_object = $response.Content | ConvertFrom-Json
+                #$converted_pci_object
+                $hash_table2 = @{}
+                $converted_pci_object.psobject.properties | Foreach { $hash_table2[$_.Name] = $_.Value }
+                $hash_table2
+                
+<#
+{
+    "@odata.context": "/redfish/v1/$metadata#PCIeDeviceCollection.PCIeDeviceCollection",
+    "@odata.etag": "\"1770678847\"",
+    "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices",
+    "@odata.type": "#PCIeDeviceCollection.PCIeDeviceCollection",
+    "Description": "The Collection of PCIeDevices",
+    "Members": [
+        {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_D4_00"
+        },
+        {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_D5_00"
+        },
+        {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_D6_00"
+        },
+        {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_E0_00"
+        },
+        {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_E0_01"
+        },
+        {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_E0_02"
+        },
+        {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_F0_00"
+        },
+        {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_F0_01"
+        },
+        {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_F0_02"
+        },
+        {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_F0_03"
+        },
+        {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_F0_04"
+        },
+        {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_F0_05"
+        },
+        {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_F0_07"
+        },
+        {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_F1_00"
+        }
+    ],
+    "Members@odata.count": 64,
+    "Members@odata.nextLink": "/redfish/v1/Chassis/Self/PCIeDevices?$skip=50",
+    "Name": "PCIeDevice Collection"
+}
+#>
 
-            # Get pci count
-            $pci_x_count =$converted_pci_object."Members@odata.count"
-
-            # Loop all pci resource instance in EthernetInterfaces resource
-            for($i = 0;$i -lt $pci_x_count;$i ++)
-            {
-                $ht_pcidevice = @{}
-
-                # Get pci resource
-                $pci_device_x_url ="https://$ip" +  $converted_pci_object.Members[$i]."@odata.id"
-                $response_pci_x_device = Invoke-WebRequest -Uri $pci_device_x_url -Headers $JsonHeader -Method Get -UseBasicParsing 
+                # Get pci count
+                $pci_x_count =$converted_pci_object."Members@odata.count"
+                # Loop all pci resource instance in EthernetInterfaces resource
+                #for($i = 0;$i -lt $pci_x_count;$i ++)
+                foreach($pcidevice_object in $converted_pci_object.Members)
+                {
+                    $ht_pcifunction = @{}
+                    # Get pci resource
+                    $pci_device_x_url ="https://$ip" +  $pcidevice_object."@odata.id"
+                    #$pci_device_x_url #/redfish/v1/Chassis/Self/PCIeDevices/00_01_00
  <#
 {
     "@odata.context": "/redfish/v1/$metadata#PCIeDevice.PCIeDevice",
@@ -173,72 +237,126 @@ function get_pci_inventory
     }
 }
 #>
-                $converted_pci_x_object = $response_pci_x_device.Content | ConvertFrom-Json
-                $response_members_url = @{}
-                $converted_pci_x_object.psobject.properties | Foreach { $response_members_url[$_.Name] = $_.Value }
-                
-                $response_efunctions_url = @{}
-                $response_members_url.PCIeFunctions.psobject.properties | Foreach { $response_efunctions_url[$_.Name] = $_.Value }
-                
-                $response_links_url = @{}
-                #$response_members_url.Links.psobject.properties | Foreach { $response_links_url[$_.Name] = $_.Value }
-                #$response_member_id = @{}
-                $response_id = $response_efunctions_url['@odata.id']
-                $response_id.psobject.properties | Foreach { $response_member_id[$_.Name] = $_.Value }
-                $properties = @('Id', 'Name', 'Description', 'Status', 'Manufacturer', 'Model', 'DeviceType', 'SerialNumber', 'PartNumber', 'FirmwareVersion', 'SKU')
-                foreach ($property in $properties) 
-                {
-                    if($response_members_url.Keys -contains $property)
-                    {
-                        $ht_pcidevice[$property] = $converted_pci_x_object.$property
-                    }
-                }
-                # Retrun result
-                $ht_pcidevice['PCIeFunctions'] = @()
-                $members = @()
-                
-                if($response_members_url.Keys -contains 'PCIeFunctions' -and $response_efunctions_url.Keys -contains '@odata.id' -and $response_member_id -ne $null)
-                {
-                    $response_pciefunc ="https://$ip" +  $converted_pci_x_object.PCIeFunctions."@odata.id"
-                    $response_pci_efunc = Invoke-WebRequest -Uri $response_pciefunc -Headers $JsonHeader -Method Get -UseBasicParsing 
-                    $converted_pciobject = $response_pci_efunc.Content | ConvertFrom-Json
+                    $response_pci_x_device = Invoke-WebRequest -Uri $pci_device_x_url -Headers $JsonHeader -Method Get -UseBasicParsing 
+                    $converted_pci_x_object = $response_pci_x_device.Content | ConvertFrom-Json
+<#
+{
+    "@odata.context": "/redfish/v1/$metadata#PCIeDevice.PCIeDevice",
+    "@odata.etag": "\"1770669948\"",
+    "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_D4_00",
+    "@odata.type": "#PCIeDevice.v1_4_0.PCIeDevice",
+    "DeviceType": "SingleFunction",
+    "Id": "00_D4_00",
+    "Name": "00_D4_00",
+    "PCIeFunctions": {
+        "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_D4_00/PCIeFunctions"
+    },
+    "Status": {
+        "Health": "OK",
+        "State": "Enabled"
+    }
+}
+#>
+
                     $hash_table = @{}
-                    $converted_pciobject.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
-                    foreach($member in $hash_table.Members)
+                    $converted_pci_x_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value } 
+                    foreach ($key in $hash_table.Keys) 
                     {
-                        $members+=$member
-                    }
-                }else{
-                    if($response_members_url.Keys -contains 'Links' -and $response_links_url.Keys -contains 'PCIeFunctions')
-                    {
-                        $response_members = $response_members_url['Links']['PCIeFunctions']
-                        foreach($pciefunc_entry in $response_members)
+                
+                        if('Description','@odata.context','@odata.id','@odata.type','@odata.etag', 'Links','PCIeFunctions' -notcontains $key)
                         {
-                            $members += $pciefunc_entry
+                
+                            $ht_pcifunction[$key] = $hash_table.$key
                         }
                     }
-                }
-                foreach($member_url in $members)
-                {
-                    $pciefunc = @{}
-                    $response_pciefunc_url = "https://$ip" +  $member_url."@odata.id"
-                    $response_pciefunc_member = Invoke-WebRequest -Uri $response_pciefunc_url -Headers $JsonHeader -Method Get -UseBasicParsing 
-                    $converted_pciobject = $response_pciefunc_member.Content | ConvertFrom-Json
-                    $hash_table = @{}
-                    $converted_pciobject.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
-                    $properties = @('Id', 'VendorId', 'DeviceId', 'SubsystemId', 'SubsystemVendorId', 'DeviceClass', 'FunctionId', 'FunctionType')
-                    foreach($property in $properties)
+                    $ht_pcifunction['PCIeDevice']=$hash_table.Id
+                    
+
+
+                    $pci_function_url ="https://$ip" +  $converted_pci_x_object.PCIeFunctions."@odata.id"
+                    #$pci_function_url #/redfish/v1/Chassis/Self/PCIeDevices/00_01_00/PCIeFunctions
+                    $response_pcifun_x_device = Invoke-WebRequest -Uri $pci_function_url -Headers $JsonHeader -Method Get -UseBasicParsing 
+                    $converted_pcifun_x_object = $response_pcifun_x_device.Content | ConvertFrom-Json
+<#
+{
+    "@odata.context": "/redfish/v1/$metadata#PCIeFunctionCollection.PCIeFunctionCollection",
+    "@odata.etag": "\"1770679715\"",
+    "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_D4_00/PCIeFunctions",
+    "@odata.type": "#PCIeFunctionCollection.PCIeFunctionCollection",
+    "Description": "The Collection of PCIeFunctions",
+    "Members": [
+        {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_D4_00/PCIeFunctions/DevType3__DevIndex4A"
+        }
+    ],
+    "Members@odata.count": 1,
+    "Name": "PCIeFunction Collection"
+}
+#>
+
+                    foreach($pcifun_x_object in $converted_pcifun_x_object.Members)
                     {
-                        if($hash_table.Keys -contains $property)
-                        {
-                            $pciefunc[$property] = $hash_table.$property
+                        $pcifun_x_url_string = "https://$ip" + $pcifun_x_object."@odata.id"
+                        $pcifun_x_url_string = $pcifun_x_url_string -replace ' ', '%20' #patch asus bugs
+                        #$pcifun_x_url_string
+                        # Get system resource
+                        try{
+
+                        $response = Invoke-WebRequest -Uri $pcifun_x_url_string -Headers $JsonHeader -Method Get -UseBasicParsing
                         }
+                        catch
+                        {
+                           continue
+                        }
+                        $pcifun_converted_object = $response.Content | ConvertFrom-Json
+<#
+{
+    "@odata.context": "/redfish/v1/$metadata#PCIeFunction.PCIeFunction",
+    "@odata.etag": "\"1770669948\"",
+    "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_D4_00/PCIeFunctions/DevType3__DevIndex4A",
+    "@odata.type": "#PCIeFunction.v1_2_3.PCIeFunction",
+    "ClassCode": "0x060400",
+    "DeviceClass": "Bridge",
+    "DeviceId": "0x1150",
+    "FunctionId": 0,
+    "FunctionType": "Physical",
+    "Id": "DevType3__DevIndex4A",
+    "Links": {
+        "PCIeDevice": {
+            "@odata.id": "/redfish/v1/Chassis/Self/PCIeDevices/00_D4_00"
+        }
+    },
+    "Name": "DevType3__DevIndex4A",
+    "RevisionId": "0x06",
+    "Status": {
+        "Health": "OK",
+        "State": "Enabled"
+    },
+    "SubsystemId": "0x0000",
+    "SubsystemVendorId": "0x0000",
+    "VendorId": "0x1A03"
+} 
+#>
+                        $hash_table = @{}
+                        $pcifun_converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
+                   
+                        #$properties = @('Name', 'Description', 'Status')
+                        foreach ($key in $hash_table.Keys) 
+                        {
+                
+                            if('Description','@odata.context','@odata.id','@odata.type','@odata.etag', 'Links' -notcontains $key)
+                            {
+                
+                                $ht_pcifunction[$key] = $hash_table.$key
+                            }
+                        }
+                        #$ht_pcifunction
+                        ConvertOutputHashTableToObject $ht_pcifunction
                     }
-                    $ht_pcidevice['PCIeFunctions'] += $pciefunc
                 }
-                $pci_details += $ht_pcidevice
-                 ConvertOutputHashTableToObject $ht_pcidevice
-            }
+                $pci_devices_url=$hash_table2.'Members@odata.nextLink' 
+            }while($pci_devices_url)
+
         }  
         #$pci_details | ConvertTo-Json -Depth 10
         #Write-Host " "
