@@ -21,7 +21,7 @@
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | Power Control      | get_system_power_state.psm1                |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_system_power_reset_types.psm1          |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | set_susyem_power_state.psm1                |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | set_system_power_state.psm1                |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | restart_bmc.psm1                           |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | Event Log          | get_system_log.psm1                        |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
