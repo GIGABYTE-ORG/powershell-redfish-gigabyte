@@ -62,6 +62,7 @@
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | Light Path         | get_chassis_indicator_led.psm1             |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | set_chassis_indicator_led.psm1             |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | get_chassis_indicator_led_types.psm1       |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | Power Management   | get_power_limit.psm1                       |        Yes         |     Yes *2     |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | set_power_limit.psm1                       |        NO          |     Yes *2     |     Yes         |     Yes         |     Yes         |     Yes         |
