@@ -26,7 +26,7 @@
 Import-module $PSScriptRoot\lenovo_utils.psm1
 
 
-function get_power_state
+function get_system_power_state
 {
    <#
    .Synopsis
@@ -40,7 +40,7 @@ function get_power_state
     - system_id: Pass in System resource instance id(none: first instance, all: all instances)
     - config_file: Pass in configuration file path, default configuration file is config.ini
    .EXAMPLE
-    get_power_state -ip 10.10.10.10 -username USERID -password PASSW0RD
+    get_system_power_state -ip 10.10.10.10 -username USERID -password PASSW0RD
    #>
    
     param(
