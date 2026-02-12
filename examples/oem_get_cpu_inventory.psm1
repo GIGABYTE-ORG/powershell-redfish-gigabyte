@@ -25,7 +25,7 @@
 ###
 Import-module $PSScriptRoot\lenovo_utils.psm1
 
-function lenovo_get_cpu_inventory
+function oem_get_cpu_inventory
 {
     <#
    .Synopsis
@@ -152,6 +152,14 @@ function lenovo_get_cpu_inventory
                 if ($null -ne $cpu_converted_object.Oem.Lenovo.CurrentClockSpeedMHz)
                 {
                     $ht_cpu_info["CurrentClockSpeedMHz"] = $cpu_converted_object.Oem.Lenovo.CurrentClockSpeedMHz
+                }
+                if ($null -ne $cpu_converted_object.Oem.Gbt.CacheInfo)
+                {
+                    $ht_cpu_info["CacheInfo"] = $cpu_converted_object.Oem.Gbt.CacheInfo
+                }
+                if ($null -ne $cpu_converted_object.Oem.Gbt.CurrentClockSpeedMHz)
+                {
+                    $ht_cpu_info["CurrentClockSpeedMHz"] = $cpu_converted_object.Oem.Gbt.CurrentClockSpeedMHz
                 }
                 # Return result
                 ConvertOutputHashTableToObject $ht_cpu_info | ConvertTo-Json
