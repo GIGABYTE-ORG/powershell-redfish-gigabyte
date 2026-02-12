@@ -38,10 +38,6 @@ function oem_get_fru_inventory
     - config_file: Pass in configuration file path, default configuration file is config.ini
    .EXAMPLE
     oem_get_fru_inventory -ip 10.10.10.10 -username USERID -password PASSW0RD 
-    $(oem_get_fru_inventory -ip 10.10.10.10 -username USERID -password PASSW0RD).Board
-    $(oem_get_fru_inventory -ip 10.10.10.10 -username USERID -password PASSW0RD).Chassis
-    $(oem_get_fru_inventory -ip 10.10.10.10 -username USERID -password PASSW0RD).Product
-
    #>
    
     param(
@@ -105,12 +101,6 @@ function oem_get_fru_inventory
                $chassis_url_collection += $tmp_chassis_url_string
         }
         # Define property list we want to get
-        $property_list = @('Description', 'EntityInstance', 'Id', 'Assertion',
-                      'RecordType', 'OwnerLUN', 'OwnerID', 'SensorNumber',
-                      'Name', 'Status', 'SensorType', 'ReadingType',
-                      'BaseUnit', 'Reading', 'EntityID', 'SensorTypeNumber',
-                      'ThresholdLowerFatal', 'ThresholdLowerCritical', 'ThresholdLowerNonCritical', 'ThresholdUpperFatal',
-                      'ThresholdUpperCritical', 'ThresholdUpperNonCritical', 'UnitModifier')
         $property_list = @('Description', 'Id','PhysicalContext', 
                       'Name', 'Status', 'ReadingType',
                       'ReadingUnits', 'Reading', 'ReadingRangeMax','ReadingRangeMin', 'Thresholds', 'Accuracy','SensingFrequency')
@@ -168,7 +158,7 @@ function oem_get_fru_inventory
             $hash_table["Chassis"]=$converted_object_fru.FruInfo.Chassis
             $hash_table["Product"]=$converted_object_fru.FruInfo.Product
             # Output result
-            ConvertOutputHashTableToObject $hash_table             
+            $hash_table             
         }
     }
     catch
