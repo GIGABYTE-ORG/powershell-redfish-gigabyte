@@ -1,0 +1,212 @@
+###
+#
+# Lenovo Redfish examples - Get Oem FRUs Information
+#
+# Copyright Notice:
+#
+# Copyright 2019 Lenovo Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+###
+
+
+###
+#  Import utility libraries
+###
+Import-module $PSScriptRoot\lenovo_utils.psm1
+
+function oem_get_fru_inventory
+{
+    <#
+   .Synopsis
+    Cmdlet used to get fru information
+   .DESCRIPTION
+    Cmdlet used to get sensors information from BMC using Redfish API. Information will be printed to the screen. Connection information can be specified via command parameter or configuration file.
+    - ip: Pass in BMC IP address
+    - username: Pass in BMC username
+    - password: Pass in BMC username password
+    - config_file: Pass in configuration file path, default configuration file is config.ini
+   .EXAMPLE
+    oem_get_fru_inventory -ip 10.10.10.10 -username USERID -password PASSW0RD 
+    $(oem_get_fru_inventory -ip 10.10.10.10 -username USERID -password PASSW0RD).Board
+    $(oem_get_fru_inventory -ip 10.10.10.10 -username USERID -password PASSW0RD).Chassis
+    $(oem_get_fru_inventory -ip 10.10.10.10 -username USERID -password PASSW0RD).Product
+
+   #>
+   
+    param(
+        [Parameter(Mandatory=$False)]
+        [string]$ip="",
+        [Parameter(Mandatory=$False)]
+        [string]$username="",
+        [Parameter(Mandatory=$False)]
+        [string]$password="",
+        [Parameter(Mandatory=$False)]
+        [string]$config_file="config.ini"
+        )
+        
+    # Get configuration info from config file
+    $ht_config_ini_info = read_config -config_file $config_file
+    
+    # If the parameter is not specified via command line, use the setting from configuration file
+    if ($ip -eq "")
+    { 
+        $ip = [string]($ht_config_ini_info['BmcIp'])
+    }
+    if ($username -eq "")
+    {
+        $username = [string]($ht_config_ini_info['BmcUsername'])
+    }
+    if ($password -eq "")
+    {
+        $password = [string]($ht_config_ini_info['BmcUserpassword'])
+    }
+
+    try
+    {
+        $session_key = ""
+        $session_location = ""
+
+        # Create session
+        $session = create_session -ip $ip -username $username -password $password
+        $session_key = $session.'X-Auth-Token'
+        $session_location = $session.Location
+
+        # Build headers with session key for authentication
+        $JsonHeader = @{ 
+            "X-Auth-Token" = $session_key
+            "Accept" = "application/json"
+        }
+        
+        # Get the chassis url
+        $base_url = "https://$ip/redfish/v1/"
+        $response = Invoke-WebRequest -Uri $base_url -Headers $JsonHeader -Method Get -UseBasicParsing
+        $converted_object = $response.Content | ConvertFrom-Json
+        $chassis_url = $converted_object.Chassis."@odata.id"
+
+        #Get chassis list 
+        $chassis_url_collection = @()
+        $chassis_url_string = "https://$ip"+ $chassis_url
+        $response = Invoke-WebRequest -Uri $chassis_url_string -Headers $JsonHeader -Method Get -UseBasicParsing
+        $converted_object = $response.Content | ConvertFrom-Json
+        foreach($i in $converted_object.Members)
+        {
+               $tmp_chassis_url_string = "https://$ip" + $i."@odata.id"
+               $chassis_url_collection += $tmp_chassis_url_string
+        }
+        # Define property list we want to get
+        $property_list = @('Description', 'EntityInstance', 'Id', 'Assertion',
+                      'RecordType', 'OwnerLUN', 'OwnerID', 'SensorNumber',
+                      'Name', 'Status', 'SensorType', 'ReadingType',
+                      'BaseUnit', 'Reading', 'EntityID', 'SensorTypeNumber',
+                      'ThresholdLowerFatal', 'ThresholdLowerCritical', 'ThresholdLowerNonCritical', 'ThresholdUpperFatal',
+                      'ThresholdUpperCritical', 'ThresholdUpperNonCritical', 'UnitModifier')
+        $property_list = @('Description', 'Id','PhysicalContext', 
+                      'Name', 'Status', 'ReadingType',
+                      'ReadingUnits', 'Reading', 'ReadingRangeMax','ReadingRangeMin', 'Thresholds', 'Accuracy','SensingFrequency')
+
+        # Loop all chassis resource instance in $chassis_url_collection
+        foreach($chassis_url_string in $chassis_url_collection)
+        {
+            #get chassis resource
+            $response = Invoke-WebRequest -Uri $chassis_url_string -Headers $JsonHeader -Method Get -UseBasicParsing
+            $converted_object_chassis = $response.Content | ConvertFrom-Json
+            $hash_table = @{}
+            $converted_object_chassis.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
+            if ($hash_table.Keys -notcontains "Fru")
+            {
+                continue   
+            }
+            #get sensors resource
+            $fru_url_string = "https://$ip" + $converted_object_chassis.Fru."@odata.id"
+            $response = Invoke-WebRequest -Uri $fru_url_string -Headers $JsonHeader -Method Get -UseBasicParsing
+            $converted_object_fru = $response.Content | ConvertFrom-Json
+<#
+{
+    "@odata.context": "/redfish/v1/$metadata#Fru.Fru(Description,FruInfo,Name,Id)",
+    "@odata.etag": "\"1770749692\"",
+    "@odata.id": "/redfish/v1/Chassis/Self/Fru",
+    "@odata.type": "#Fru.v1_0_0.Fru",
+    "Description": "FRU Information",
+    "FruInfo": {
+        "Board": {
+            "BoardManufacturer": "ASUSTeK COMPUTER INC.",
+            "BoardProduct": "Pro WS WRX90E-SAGE SE",
+            "BoardSerial": "250962239200118"
+        },
+        "Chassis": {
+            "ChassisPartNumber": "table: 0x768cc5d0",
+            "ChassisSerial": "table: 0x768cc5f8",
+            "ChassisTypes": "table: 0x768cc5a8"
+        },
+        "Product": {
+            "AssetTag": "table: 0x768cc368",
+            "ProductManufacturer": "table: 0x768cc138",
+            "ProductName": "table: 0x768cc198",
+            "ProductPartNumber": "table: 0x768cc1c0",
+            "ProductSerial": "table: 0x768cc278",
+            "ProductVersion": "table: 0x768cc250"
+        }
+    },
+    "Id": "Fru",
+    "Name": "Fru"
+}
+#>
+
+            $hash_table = @{}
+            $hash_table["Board"]=$converted_object_fru.FruInfo.Board
+            $hash_table["Chassis"]=$converted_object_fru.FruInfo.Chassis
+            $hash_table["Product"]=$converted_object_fru.FruInfo.Product
+            # Output result
+            ConvertOutputHashTableToObject $hash_table             
+        }
+    }
+    catch
+    {
+        # Handle http exception response
+        if($_.Exception.Response)
+        {
+            Write-Host "Error occured, error code:" $_.Exception.Response.StatusCode.Value__
+            if ($_.Exception.Response.StatusCode.Value__ -eq 401)
+            {
+                Write-Host "Error message: You are required to log on Web Server with valid credentials first."
+            }
+            elseif ($_.ErrorDetails.Message)
+            {
+                $response_j = $_.ErrorDetails.Message | ConvertFrom-Json | Select-Object -Expand error
+                $response_j = $response_j | Select-Object -Expand '@Message.ExtendedInfo'
+                Write-Host "Error message:" $response_j.Resolution
+            }
+            else
+            {
+                Write-Host "Error message:" $_.Exception.Message
+                Write-Host "Please check arguments or server status."        
+            }
+        }
+        # Handle system exception response
+        elseif($_.Exception)
+        {
+            Write-Host "Error message:" $_.Exception.Message
+            Write-Host "Please check arguments or server status."
+        }
+        return $False
+    }
+    # Delete existing session whether script exit successfully or not
+    finally
+    {
+        if ($session_key -ne "")
+        {
+            delete_session -ip $ip -session $session
+        }
+    } 
+}
