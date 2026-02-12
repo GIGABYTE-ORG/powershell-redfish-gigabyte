@@ -103,7 +103,7 @@ function get_sensor_inventory
         # Define property list we want to get
         $property_list = @('Description', 'EntityInstance', 'Id', 'Assertion',
                       'RecordType', 'OwnerLUN', 'OwnerID', 'SensorNumber',
-                      'Name', 'State', 'SensorType', 'ReadingType',
+                      'Name', 'Status', 'SensorType', 'ReadingType',
                       'BaseUnit', 'Reading', 'EntityID', 'SensorTypeNumber',
                       'ThresholdLowerFatal', 'ThresholdLowerCritical', 'ThresholdLowerNonCritical', 'ThresholdUpperFatal',
                       'ThresholdUpperCritical', 'ThresholdUpperNonCritical', 'UnitModifier')
