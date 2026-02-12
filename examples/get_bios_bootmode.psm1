@@ -106,7 +106,7 @@ function get_bios_bootmode
             $response = Invoke-WebRequest -Uri $url_address_system -Headers $JsonHeader -Method Get -UseBasicParsing
 
             # Get Bios resource
-            $converted_object = $response.Content | ConvertFrom-Json
+            $converted_object = $response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
             $Bios_url = $converted_object.Bios."@odata.id"
             $uri_address_Bios = "https://$ip" + $Bios_url
             $response = Invoke-WebRequest -Uri $uri_address_Bios -Headers $JsonHeader -Method Get -UseBasicParsing
