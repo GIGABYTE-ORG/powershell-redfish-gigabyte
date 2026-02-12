@@ -17,6 +17,7 @@
 |                    | get_temperatures_inventory.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_volt_inventory.psm1                    |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_sensor_inventory.psm1                  |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | oem_get_cpu_inventory.psm1                 |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | oem_get_fru_inventory.psm1                 |        No          |     Yes        |     No          |     No          |     No          |     No          |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | Power Control      | get_system_power_state.psm1                |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
