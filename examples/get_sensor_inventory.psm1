@@ -101,12 +101,10 @@ function get_sensor_inventory
                $chassis_url_collection += $tmp_chassis_url_string
         }
         # Define property list we want to get
-        $property_list = @('Description', 'EntityInstance', 'Id', 'Assertion',
-                      'RecordType', 'OwnerLUN', 'OwnerID', 'SensorNumber',
-                      'Name', 'Status', 'SensorType', 'ReadingType',
-                      'BaseUnit', 'Reading', 'EntityID', 'SensorTypeNumber',
-                      'ThresholdLowerFatal', 'ThresholdLowerCritical', 'ThresholdLowerNonCritical', 'ThresholdUpperFatal',
-                      'ThresholdUpperCritical', 'ThresholdUpperNonCritical', 'UnitModifier')
+        # Sensor.v1_2_0.Sensor
+        $property_list = @('Description', 'Id', 
+                      'Name', 'Status', 'ReadingType',
+                      'ReadingUnits', 'Reading', 'ReadingRangeMax','ReadingRangeMin', 'Thresholds', 'Accuracy','SensingFrequency')
 
         # Loop all chassis resource instance in $chassis_url_collection
         foreach($chassis_url_string in $chassis_url_collection)
