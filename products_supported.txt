@@ -1,4 +1,4 @@
-| Category           | Script Name                                |  GA WRX90 AI TOP   |   MH53-G40     |   ASUS          |   MW53-H70      |    W773-H5D     |    W773-W80     |
+| Category           | Script Name                                |  GBT WRX90 AI TOP  |  GCT MH53-G40  |   ASUS          |   MW53-H70      |    W773-H5D     |    W773-W80     |
 |                    |                                            |   AMD WRX90        |   AMD WRX90    |   AMD WRX90     |   Intel W790    |    AMD WRX90    |    Intel W790   |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | Discovery          | todo                                       |        Yes         |     Yes        |     Yes         |      Yes        |     Yes         |     Yes         |
@@ -17,7 +17,7 @@
 |                    | get_volt_inventory.psm1                    |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_psu_inventory.psm1                     |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_sensor_inventory.psm1                  |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | oem_get_fru_inventory.psm1                 |        No          |     Yes        |     No          |     No          |     No          |     No          |
+|                    | oem_get_fru_inventory.psm1                 |        No          |     No         |     Yes         |     No          |     No          |     No          |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | Power Control      | get_system_power_state.psm1                |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_system_power_reset_types.psm1          |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
