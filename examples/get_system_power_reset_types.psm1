@@ -24,7 +24,7 @@
 ###get
 Import-module $PSScriptRoot\lenovo_utils.psm1
 
-function get_system_reset_types
+function get_system_power_reset_types
 {
     <#
    .Synopsis
@@ -37,7 +37,7 @@ function get_system_reset_types
     - system_id:Pass in ComputerSystem instance id(None: first instance, all: all instances)
     - config_file: Pass in configuration file path, default configuration file is config.ini
    .EXAMPLE
-    get_system_reset_types -ip 10.10.10.10 -username USERID -password PASSW0RD 
+    get_system_power_reset_types -ip 10.10.10.10 -username USERID -password PASSW0RD 
    #>
    
     param(
