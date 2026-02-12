@@ -128,7 +128,23 @@ function get_cpu_inventory
                         $ht_cpu_info[$key] = $ht_tmp[$key]
                     }
                 }
-                
+                if ($null -ne $cpu_converted_object.Oem.Lenovo.CacheInfo)
+                {
+                    $ht_cpu_info["CacheInfo"] = $cpu_converted_object.Oem.Lenovo.CacheInfo
+                }
+                if ($null -ne $cpu_converted_object.Oem.Lenovo.CurrentClockSpeedMHz)
+                {
+                    $ht_cpu_info["CurrentClockSpeedMHz"] = $cpu_converted_object.Oem.Lenovo.CurrentClockSpeedMHz
+                }
+                if ($null -ne $cpu_converted_object.Oem.Gbt.CacheInfo)
+                {
+                    $ht_cpu_info["CacheInfo"] = $cpu_converted_object.Oem.Gbt.CacheInfo
+                }
+                if ($null -ne $cpu_converted_object.Oem.Gbt.CurrentClockSpeedMHz)
+                {
+                    $ht_cpu_info["CurrentClockSpeedMHz"] = $cpu_converted_object.Oem.Gbt.CurrentClockSpeedMHz
+                }
+               
                 # Output result
                 ConvertOutputHashTableToObject $ht_cpu_info 
             }
