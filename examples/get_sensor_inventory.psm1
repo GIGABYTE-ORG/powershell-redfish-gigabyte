@@ -103,7 +103,7 @@ function get_sensor_inventory
         # Define property list we want to get
         # Sensor.v1_2_0.Sensor
         $property_list = @('Description', 'Id', 
-                      'Name', 'Status', 'ReadingType',
+                      'Name', 'Status', 'ReadingType','PhysicalContext',
                       'ReadingUnits', 'Reading', 'ReadingRangeMax','ReadingRangeMin', 'Thresholds', 'Accuracy','SensingFrequency')
 
         # Loop all chassis resource instance in $chassis_url_collection
