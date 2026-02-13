@@ -24,7 +24,7 @@
 ###get
 Import-module $PSScriptRoot\lenovo_utils.psm1
 
-function get_bios_bootmode
+function lenovo_get_bios_bootmode
 {
     <#
    .Synopsis
@@ -37,7 +37,7 @@ function get_bios_bootmode
     - system_id:Pass in ComputerSystem instance id(None: first instance, all: all instances)
     - config_file: Pass in configuration file path, default configuration file is config.ini
    .EXAMPLE
-    get_bios_bootmode -ip 10.10.10.10 -username USERID -password PASSW0RD 
+    lenovo_get_bios_bootmode -ip 10.10.10.10 -username USERID -password PASSW0RD 
    #>
    
     param(
@@ -106,7 +106,7 @@ function get_bios_bootmode
             $response = Invoke-WebRequest -Uri $url_address_system -Headers $JsonHeader -Method Get -UseBasicParsing
 
             # Get Bios resource
-            $converted_object = $response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
+            $converted_object = $response.Content | ConvertFrom-Json
             $Bios_url = $converted_object.Bios."@odata.id"
             $uri_address_Bios = "https://$ip" + $Bios_url
             $response = Invoke-WebRequest -Uri $uri_address_Bios -Headers $JsonHeader -Method Get -UseBasicParsing
