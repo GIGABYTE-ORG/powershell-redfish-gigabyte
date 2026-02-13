@@ -103,7 +103,40 @@ function get_all_bios_attributes
 
         # List of bios attribute info
         $list_attribute = @()
+<#
+#current BIOS settings
+/redfish/v1/Systems/Self/Bios
+{
+    "@Redfish.Settings": {
+        "@odata.type": "#Settings.v1_2_2.Settings",
+        "SettingsObject": {
+            "@odata.id": "/redfish/v1/Systems/Self/Bios/SD"
+        }
+    },
+    "AttributeRegistry": "BiosAttributeRegistryA5496.12.3.0",
+    "Attributes": {
+        "ACPI001": "Suspend Disabled",
+        "ACPI002": true,
+        "ACPI004": false,
+    }
+    "Description": "Current BIOS Settings",
+    "Id": "Bios",
+    "Name": "Current BIOS Settings"    
+}
 
+#Future BIOS Settings
+/redfish/v1/Systems/Self/Bios/SD
+{
+    "Attributes": {
+        "ACPI001": "Suspend Disabled",
+        "ACPI002": true,
+        "ACPI004": false,
+    }
+    "Description": "Future BIOS Settings",
+    "Id": "SD",
+    "Name": "Future BIOS Settings"    
+}
+#>
         # Loop all System resource instance in $system_url_collection
         foreach($system_url_string in $system_url_collection)
         {
