@@ -156,9 +156,15 @@ function set_bios_attribute
             $hash_table = @{}
             $converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
 
-            $temp = [string]$hash_table.Bios
-            $uri_address_Bios = "https://$ip"+($temp.Split("=")[1].Replace("}",""))
-       
+            $uri_address_Bios = "https://$ip"+[string]$converted_object.Bios."@odata.id"
+            # get Bios attributes collections from Bios
+            $response = Invoke-WebRequest -Uri $uri_address_Bios -Headers $JsonHeader -Method Get -UseBasicParsing
+            $converted_object = $response.Content | ConvertFrom-Json
+            $hash_table = @{}
+            $converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
+                               
+            $temp = $hash_table.'@Redfish.Settings'."SettingsObject".'@odata.id'
+            $uri_address_BiosPending = "https://$ip"+$temp
 
             # get Bios attributes collections from Bios
             $response = Invoke-WebRequest -Uri $uri_address_Bios -Headers $JsonHeader -Method Get -UseBasicParsing
@@ -172,13 +178,20 @@ function set_bios_attribute
 
             if ($attribute_value -match "^[\d\.]+$")
             {
-                $attribute_value = [int]$attribute_value
+                $new_attribute_value = [int]$attribute_value
+            }
+            else
+            {
+                $new_attribute_value = $attribute_value
             }
 
             $JsonBody = @{ Attributes = @{
-                "$attribute_name"=$attribute_value
+                "$attribute_name"=$new_attribute_value
                 }} | ConvertTo-Json -Compress
-            
+
+            #Json Header 加入 { "If-Match" = @odata.etag }
+            $JsonHeader["If-Match"]=$converted_object."@odata.etag"
+
             $response = Invoke-WebRequest -Uri $uri_address_BiosPending -Headers $JsonHeader -Method Patch -Body $JsonBody -ContentType 'application/json'
 
             Write-Host
