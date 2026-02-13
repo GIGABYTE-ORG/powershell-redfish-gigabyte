@@ -107,7 +107,42 @@ function set_bios_attribute
         $system_url_collection = @()
         $system_url_collection = get_system_urls -bmcip $ip -session $session -system_id $system_id
 
-        
+<#
+#current BIOS settings
+/redfish/v1/Systems/Self/Bios
+{
+    "@Redfish.Settings": {
+        "@odata.type": "#Settings.v1_2_2.Settings",
+        "SettingsObject": {
+            "@odata.id": "/redfish/v1/Systems/Self/Bios/SD"
+        }
+    },
+    "@odata.etag": "\"1770868745\"",
+    "AttributeRegistry": "BiosAttributeRegistryA5496.12.3.0",
+    "Attributes": {
+        "ACPI001": "Suspend Disabled",
+        "ACPI002": true,
+        "ACPI004": false,
+    }
+    "Description": "Current BIOS Settings",
+    "Id": "Bios",
+    "Name": "Current BIOS Settings"    
+}
+
+#Future BIOS Settings
+/redfish/v1/Systems/Self/Bios/SD
+{
+    "@odata.etag": "\"1770957114\"",
+    "Attributes": {
+        "ACPI001": "Suspend Disabled",
+        "ACPI002": true,
+        "ACPI004": false,
+    }
+    "Description": "Future BIOS Settings",
+    "Id": "SD",
+    "Name": "Future BIOS Settings"    
+}
+#>         
         # loop all System resource instance in $system_url_collection
         foreach ($system_url_string in $system_url_collection)
         {
