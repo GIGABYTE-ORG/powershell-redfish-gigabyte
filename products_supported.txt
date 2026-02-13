@@ -36,6 +36,7 @@
 |                    | get_bios_attribute.psm1                    |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | set_bios_attribute.psm1                    |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_bios_attribute_metadata.psm1           |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | get_bios_attribute_info.psm1                    |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 
 |                    | reset_bios_default.psm1                    |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 
