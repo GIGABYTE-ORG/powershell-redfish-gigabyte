@@ -113,6 +113,7 @@ function get_all_bios_attributes
             "@odata.id": "/redfish/v1/Systems/Self/Bios/SD"
         }
     },
+    "@odata.etag": "\"1770868745\"",
     "AttributeRegistry": "BiosAttributeRegistryA5496.12.3.0",
     "Attributes": {
         "ACPI001": "Suspend Disabled",
@@ -127,6 +128,7 @@ function get_all_bios_attributes
 #Future BIOS Settings
 /redfish/v1/Systems/Self/Bios/SD
 {
+    "@odata.etag": "\"1770957114\"",
     "Attributes": {
         "ACPI001": "Suspend Disabled",
         "ACPI002": true,
