@@ -164,7 +164,7 @@ function get_all_bios_attributes
             if($bios_get -eq "pending")
             {
                 $pending_url ="https://$ip" + $converted_object."@Redfish.Settings".SettingsObject."@odata.id"
-                $response = Invoke-WebRequest -Uri $bios_url -Headers $JsonHeader -Method Get -UseBasicParsing
+                $response = Invoke-WebRequest -Uri $pending_url -Headers $JsonHeader -Method Get -UseBasicParsing
                 $converted_object = $response.Content | ConvertFrom-Json
                 
                 # Output result
