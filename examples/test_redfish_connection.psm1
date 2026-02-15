@@ -38,7 +38,7 @@ function test_redfish_connection {
                 $content = $content.Substring(0, 200) + "..."
             }
             Write-Host "`n回應內容: $content" -ForegroundColor Cyan
-            
+            Write-Host $Uri            
             return $response
         }
         catch {
@@ -53,6 +53,7 @@ function test_redfish_connection {
     try {
         $response = Invoke-WebRequest -Uri $HttpUri -Method Get -UseBasicParsing -TimeoutSec 10
         Write-Host "✓ HTTP 成功！" -ForegroundColor Green
+        Write-Host $HttpUri
         return $response
     }
     catch {
