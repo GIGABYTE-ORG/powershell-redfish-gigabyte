@@ -25,7 +25,7 @@
 ###
 Import-module $PSScriptRoot\lenovo_utils.psm1
 
-function lenovo_get_bmc_user_global
+function oem_get_bmc_user_global
 {
    <#
    .Synopsis
@@ -117,8 +117,8 @@ function lenovo_get_bmc_user_global
             }
         }
 
-        $ht_userglobal
-
+        #$ht_userglobal
+        ConvertOutputHashTableToObject $hash_table  
     }
     catch
     {
