@@ -64,7 +64,7 @@
 |                    | lenovo_get_bios_boot_order.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | lenovo_set_bios_boot_order.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
-| User Management    | lenovo_get_bmc_user_accounts.psm1          |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+| User Management    | get_bmc_user_accounts.psm1                 |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | lenovo_create_bmc_user.psm1                |        Yes         |     Yes *4     |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | lenovo_delete_bmc_user.psm1                |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | update_bmc_user_password.psm1              |        Yes         |     Yes *4     |     Yes         |     Yes         |     Yes         |     Yes         |
