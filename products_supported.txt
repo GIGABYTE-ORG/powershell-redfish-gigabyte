@@ -68,8 +68,8 @@
 |                    | lenovo_create_bmc_user.psm1                |        Yes         |     Yes *4     |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | lenovo_delete_bmc_user.psm1                |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | update_bmc_user_password.psm1              |        Yes         |     Yes *4     |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | lenovo_get_bmc_user_global.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | lenovo_set_bmc_user_global.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | oem_get_bmc_user_global.psm1               |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | oem_set_bmc_user_global.psm1               |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | disable_bmc_user.psm1                      |        Yes         |     Yes *4     |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | enable_bmc_user.psm1                       |        Yes *1      |     Yes *4     |     Yes         |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
