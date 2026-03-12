@@ -25,7 +25,7 @@
 ###
 Import-module $PSScriptRoot\lenovo_utils.psm1
 
-function lenovo_get_bmc_user_accounts
+function get_bmc_user_accounts
 {
    <#
    .Synopsis
@@ -130,7 +130,7 @@ function lenovo_get_bmc_user_accounts
                 $bmc_user['Enabled'] = $converted_object.Enabled
                 $bmc_user['Locked'] = $converted_object.Locked
                 $bmc_user['AccountTypes'] = $converted_object.AccountTypes
-                $bmc_user['SNMP'] = $converted_object.SNMP
+                #$bmc_user['SNMP'] = $converted_object.SNMP
                 $bmc_user['RoleId'] = $converted_object.RoleId
                 if($hash_table.Keys -contains "Links")
                 {
@@ -138,10 +138,10 @@ function lenovo_get_bmc_user_accounts
                     $response_accounts_role_url = Invoke-WebRequest -Uri $accounts_role_url -Headers $JsonHeader -Method Get -UseBasicParsing
                     $converted_object = $response_accounts_role_url.Content | ConvertFrom-Json
                     $bmc_user['AssignedPrivileges'] = $converted_object.AssignedPrivileges
-                    $bmc_user['OemPrivileges'] = $converted_object.OemPrivileges
+                    #$bmc_user['OemPrivileges'] = $converted_object.OemPrivileges
                 }
                 # Output result
-                ConvertOutputHashTableToObject $bmc_user | ConvertTo-Json -Depth 5   
+                ConvertOutputHashTableToObject $bmc_user #| ConvertTo-Json -Depth 5   
             }
         }
     }
