@@ -126,6 +126,17 @@ function set_bmc_ntp
             $converted_object = $response.Content | ConvertFrom-Json
             $uri_network ="https://$ip"+$converted_object.NetworkProtocol.'@odata.id'
             $parameter = @{"NTPServers"=$ntp_server; "ProtocolEnabled"=[bool]$enabled}
+
+            # Get the uri_network via Invoke-WebRequest
+            $response = Invoke-WebRequest -Uri $uri_network -Headers $JsonHeader -Method Get -UseBasicParsing
+
+            # Convert response_account_server content to hash table
+            $converted_object = $response.Content | ConvertFrom-Json
+            $hash_table = @{}
+            $converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
+
+            #Json Header 加入 { "If-Match" = @odata.etag }
+            $JsonHeader["If-Match"]=$converted_object."@odata.etag"
             
             # Build request body and send requests to set bmc ntp
             $body = @{"NTP"=$parameter}
