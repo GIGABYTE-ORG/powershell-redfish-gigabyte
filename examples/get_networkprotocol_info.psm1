@@ -24,7 +24,7 @@
 #  Import utility libraries
 ###
 Import-module $PSScriptRoot\lenovo_utils.psm1
-function get_network_protocol_info
+function get_networkprotocol_info
 {
    <#
    .Synopsis
@@ -134,38 +134,46 @@ function get_network_protocol_info
                     $network_protocol[$key] = $hash_table.$key
                 }  
             }
-            $hash_table_oem = @{}
-            $hash_table.Oem.psobject.properties | Foreach { $hash_table_oem[$_.Name] = $_.Value }
-            
-            $hash_table_lenovo = @{}
-            $hash_table_oem.Lenovo.psobject.properties | Foreach { $hash_table_lenovo[$_.Name] = $_.Value }
-
-            $hash_table_dns = @{}
-            $hash_table_lenovo.DNS.psobject.properties | Foreach { $hash_table_dns[$_.Name] = $_.Value }
-
-            if ($hash_table.Keys -contains 'Oem' -and $hash_table_oem.Keys -contains 'Lenovo' -and $hash_table_lenovo.Keys -contains 'DNS') 
+            if ($hash_table.Keys -contains 'Oem') 
             {
-                # DNS URL
-                $dns_url = $hash_table_dns."@odata.id"
-                $network_protocol['DNS'] = @{}
-                $uri_network_protocol ="https://$ip" + $dns_url
 
-                $response = Invoke-WebRequest -Uri $uri_network_protocol -Headers $JsonHeader -Method Get -UseBasicParsing
-                $converted_object = $response.Content | ConvertFrom-Json
-                $hash_table = @{}
-                $converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
-                foreach($key in $hash_table.Keys)
+                $hash_table_oem = @{}
+                $hash_table.Oem.psobject.properties | Foreach { $hash_table_oem[$_.Name] = $_.Value }
+                if($hash_table_oem.Keys -contains 'Lenovo')
                 {
-                    if("Description", "@odata.context", "@odata.id", "@odata.type",
-                    "@odata.etag", "Id", "Name", "Links", "Actions", "RelatedItem" -notcontains $key)
+
+                    $hash_table_lenovo = @{}
+                    $hash_table_oem.Lenovo.psobject.properties | Foreach { $hash_table_lenovo[$_.Name] = $_.Value }
+                    if($hash_table_lenovo.Keys -contains 'DNS')
                     {
-                        $network_protocol['DNS'][$key] = $hash_table.$key
-                    }  
+  
+                        $hash_table_dns = @{}
+                        $hash_table_lenovo.DNS.psobject.properties | Foreach { $hash_table_dns[$_.Name] = $_.Value }
+
+                        # DNS URL
+                        $dns_url = $hash_table_dns."@odata.id"
+                        $network_protocol['DNS'] = @{}
+                        $uri_network_protocol ="https://$ip" + $dns_url
+
+                        $response = Invoke-WebRequest -Uri $uri_network_protocol -Headers $JsonHeader -Method Get -UseBasicParsing
+                        $converted_object = $response.Content | ConvertFrom-Json
+                        $hash_table = @{}
+                        $converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
+                        foreach($key in $hash_table.Keys)
+                        {
+                            if("Description", "@odata.context", "@odata.id", "@odata.type",
+                            "@odata.etag", "Id", "Name", "Links", "Actions", "RelatedItem" -notcontains $key)
+                            {
+                                $network_protocol['DNS'][$key] = $hash_table.$key
+                            }  
+                        }
+                    }
                 }
 
             }
             # Output result
-            $network_protocol  | ConvertTo-Json -Depth 10
+            ConvertOutputHashTableToObject $network_protocol  #| ConvertTo-Json -Depth 10
+
         }
     }    
     catch
