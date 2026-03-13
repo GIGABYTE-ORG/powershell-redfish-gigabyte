@@ -24,7 +24,7 @@
 #  Import utility libraries
 ###
 Import-module $PSScriptRoot\lenovo_utils.psm1
-function set_serial_interfaces
+function set_serialinterfaces
 {
    <#
    .Synopsis
@@ -42,7 +42,7 @@ function set_serial_interfaces
     - enabled: The value of this property shall be a boolean indicating whether this interface is enabled. Support:(0:false,1:true)
     - config_file: Pass in configuration file path, default configuration file is config.ini
    .EXAMPLE
-    set_serial_interfaces -ip 10.10.10.10 -username USERID -password PASSW0RD -interfaceid INTERFACEID -bitrate BITRATE -stopbit -STOPBITS -parity PARITY -enabled ENABLED
+    set_serialinterfaces -ip 10.10.10.10 -username USERID -password PASSW0RD -interfaceid INTERFACEID -bitrate BITRATE -stopbit STOPBITS -parity PARITY -enabled ENABLED
    #>
    
     param
@@ -187,6 +187,20 @@ function set_serial_interfaces
             {
                 $body["StopBits"] = $stopbits
             }
+            if($enabled -eq 1)
+            {
+                $enable= "true"
+            }
+            elseif($enabled -eq 0)
+            {
+                $enable = "false"
+            }
+            else
+            {
+                Write-Host "The parameter enabled only supported disable(0) or enable(1) the BMC service."
+            }
+            $body['InterfaceEnabled'] = [bool]$enabled
+<#
             if($enabled -ne '')
             {
                 if(([bool]$enabled -eq $False -and $state -eq "Enabled") -or ([bool]$enabled -eq $True -and $state -eq "Offline"))
@@ -207,7 +221,7 @@ function set_serial_interfaces
                     $body['InterfaceEnabled'] = $False
                 }
             }
-
+#>
             $json_body = $body | ConvertTo-Json -Compress 
             # Request set serial interface
             $response = Invoke-WebRequest -Uri $serial_interfaces_x_url -Headers $JsonHeader -Method Patch -Body $json_body -ContentType 'application/json' -UseBasicParsing
