@@ -25,7 +25,7 @@
 ###
 Import-module $PSScriptRoot\lenovo_utils.psm1
 
-function oem_get_bmc_user_global
+function get_bmc_user_global
 {
    <#
    .Synopsis
