@@ -24,7 +24,7 @@
 #  Import utility libraries
 ###
 Import-module $PSScriptRoot\lenovo_utils.psm1
-function get_networkprotocol_info
+function get_networkprotocols
 {
    <#
    .Synopsis
@@ -37,7 +37,7 @@ function get_networkprotocol_info
     - password: Pass in BMC username password
     - config_file: Pass in configuration file path, default configuration file is config.ini
    .EXAMPLE
-    get_network_protocol_info -ip 10.10.10.10 -username USERID -password PASSW0RD
+    get_network_protocols -ip 10.10.10.10 -username USERID -password PASSW0RD
    #>
    
     param
