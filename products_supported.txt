@@ -77,8 +77,8 @@
 | BMC Configuration  | get_bmc_ntp.psm1                           |        Yes         |     Yes *4     |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | set_bmc_ntp.psm1                           |        Yes         |     Yes *4     |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | lenovo_set_bmc_dns.psm1                    |        Yes         |     Yes *4     |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | get_networkprotocol_info.psm1              |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | set_networkprotocol.psm1                   |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | get_networkprotocols.psm1                  |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | set_networkprotocols.psm1                   |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | lenovo_bmc_config_backup.psm1              |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | lenovo_bmc_config_restore.psm1             |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_serial_interfaces.psm1                 |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
