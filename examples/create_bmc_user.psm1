@@ -26,7 +26,7 @@
 Import-module $PSScriptRoot\lenovo_utils.psm1
 
 
-function lenovo_create_bmc_user
+function create_bmc_user
 {
     <#
    .Synopsis
@@ -41,7 +41,7 @@ function lenovo_create_bmc_user
     - newuserpassword: Pass in user new userpasswd
     - authority: The value of this parameter shall be the privileges that this user includes. For super user, this property shall be Supervisor. default is Supervisor. For the user to view information only, this property shall be ReadOnly. For other OEM authority, You can only choose one or more values in the OEM privileges list:[UserroleManagement,RemoteConsoleAccess,RemoteConsoleAndVirtualMediaAcccess,RemoteServerPowerRestartAccess,AbilityClearEventLogs,AdapterConfiguration_Basic,AdapterConfiguration_NetworkingAndSecurity,AdapterConfiguration_Advanced]
    .EXAMPLE
-    lenovo_create_bmc_user -ip 10.10.10.10 -username USERID -password PASSW0RD -newusername NEWUSERNAME -newuserpassword NEWPASSW0RD -authority @("Supervisor")
+    lenovo_create_bmc_user -ip 10.10.10.10 -username USERID -password PASSW0RD -newusername NEWUSERNAME -newuserpassword NEWPASSW0RD -authority @("Administrator")
    #>
    
     param
@@ -51,7 +51,7 @@ function lenovo_create_bmc_user
         [Parameter(Mandatory=$True)]
         [string]$newuserpassword,
         [Parameter(Mandatory=$False)]
-        [String[]]$authority = @("Supervisor"),
+        [String[]]$authority = @("Administrator"),
         [Parameter(Mandatory=$False)]
         [string]$ip="",
         [Parameter(Mandatory=$False)]
@@ -119,7 +119,7 @@ function lenovo_create_bmc_user
         {
             #Set rolename
             $role_name = ""
-            if("Supervisor"  -in $authority)
+            if("Administrator"  -in $authority)
             {
                 $role_name = "Administrator"
             }elseif("Operator"  -in $authority)
