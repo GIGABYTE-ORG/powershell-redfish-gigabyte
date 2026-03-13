@@ -170,8 +170,8 @@ function set_serialinterfaces
                 Write-Host "The specified Interface Id {0} has no BitRate property, not valid.",$hash_table.Id
             }
 
-            $hash_table."@odata.etag"
-            $hash_table.BitRate
+            #$hash_table."@odata.etag"
+            #$hash_table.BitRate
 
             $body = @{}
             # Build body for set serial interfaces properties value
@@ -222,6 +222,7 @@ function set_serialinterfaces
                 }
             }
 #>
+            $body
             $json_body = $body | ConvertTo-Json -Compress 
             # Request set serial interface
             $response = Invoke-WebRequest -Uri $serial_interfaces_x_url -Headers $JsonHeader -Method Patch -Body $json_body -ContentType 'application/json' -UseBasicParsing
