@@ -36,40 +36,33 @@
 |                    | get_bios_attribute.psm1                    |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | set_bios_attribute.psm1                    |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_bios_attribute_metadata.psm1           |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | get_bios_attribute_info.psm1                    |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-
+|                    | get_bios_attribute_info.psm1               |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | reset_bios_default.psm1                    |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-
 |                    | get_bios_bootmode.psm1                     |        NO          |     NO         |     NO          |     Yes          |     Yes         |     Yes         |
 |                    | set_bios_bootmode_legacy.psm1              |        NO          |     NO         |     NO          |     Yes         |     Yes         |     Yes         |
 |                    | set_bios_bootmode_uefi.psm1                |        NO          |     NO         |     NO          |     Yes         |     Yes         |     Yes         |
-|                    | get_bios_boot_order.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | set_bios_boot_order.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-
+|                    | get_bios_boot_order.psm1                   |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | set_bios_boot_order.psm1                   |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_server_boot_once.psm1                  |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | get_server_boot_once_types.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | set_server_boot_once.psm1                  |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-
 |                    | get_secure_boot_status.psm1                |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | disable_secure_boot.psm1                   |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | enable_secure_boot.psm1                    |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | reset_secure_boot.psm1                     |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-
 |                    | set_bios_password.psm1                     |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-
-|                    | lenovo_get_bios_bootmode.psm1                     |        NO          |     NO         |     NO          |     Yes          |     Yes         |     Yes         |
-|                    | lenovo_set_bios_bootmode_legacy.psm1              |        NO          |     NO         |     NO          |     Yes         |     Yes         |     Yes         |
-|                    | lenovo_set_bios_bootmode_uefi.psm1                |        NO          |     NO         |     NO          |     Yes         |     Yes         |     Yes         |
-
+|                    | lenovo_get_bios_bootmode.psm1              |        NO          |     NO         |     NO          |     Yes          |     Yes         |     Yes         |
+|                    | lenovo_set_bios_bootmode_legacy.psm1       |        NO          |     NO         |     NO          |     Yes         |     Yes         |     Yes         |
+|                    | lenovo_set_bios_bootmode_uefi.psm1         |        NO          |     NO         |     NO          |     Yes         |     Yes         |     Yes         |
 |                    | lenovo_get_bios_boot_order.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | lenovo_set_bios_boot_order.psm1            |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
 | User Management    | get_bmc_user_accounts.psm1                 |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | lenovo_create_bmc_user.psm1                |        Yes         |     Yes *4     |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | lenovo_delete_bmc_user.psm1                |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | create_bmc_user.psm1                       |        Yes         |     Yes *4     |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | delete_bmc_user.psm1                       |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | update_bmc_user_password.psm1              |        Yes         |     Yes *4     |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | oem_get_bmc_user_global.psm1               |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
-|                    | oem_set_bmc_user_global.psm1               |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | get_bmc_user_global.psm1                   |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
+|                    | set_bmc_user_global.psm1                   |        Yes         |     Yes        |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | disable_bmc_user.psm1                      |        Yes         |     Yes *4     |     Yes         |     Yes         |     Yes         |     Yes         |
 |                    | enable_bmc_user.psm1                       |        Yes *1      |     Yes *4     |     Yes         |     Yes         |     Yes         |     Yes         |
 |--------------------|--------------------------------------------|--------------------|----------------|-----------------|-----------------|-----------------|-----------------|
