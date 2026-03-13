@@ -26,7 +26,7 @@
 Import-module $PSScriptRoot\lenovo_utils.psm1
 
 
-function lenovo_delete_bmc_user
+function delete_bmc_user
 {
     <#
    .Synopsis
