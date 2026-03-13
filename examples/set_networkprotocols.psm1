@@ -24,7 +24,7 @@
 #  Import utility libraries
 ###
 Import-module $PSScriptRoot\lenovo_utils.psm1
-function set_network_protocol
+function set_networkprotocols
 {
    <#
    .Synopsis
@@ -40,7 +40,7 @@ function set_network_protocol
     - port: The value of this property shall contain the port assigned for the protocol. These ports "IPMI:623","SLP:427" and "SSDP:1900" are reserved and can only be used for the corresponding services
     - config_file: Pass in configuration file path, default configuration file is config.ini
    .EXAMPLE
-    set_networkprotocol -ip 10.10.10.10 -username USERID -password PASSW0RD -service SERVICE -port PORT
+    set_networkprotocols -ip 10.10.10.10 -username USERID -password PASSW0RD -service SERVICE -port PORT
    #>
    
     param
@@ -155,6 +155,16 @@ function set_network_protocol
                Write-Host "Please check the BMC service name is in the [HTTPS,SSDP,SSH,SNMP,IPMI,VirtualMedia]"
                return $False
             }
+            # Get the uri_network_protocol via Invoke-WebRequest
+            $response = Invoke-WebRequest -Uri $uri_network_protocol -Headers $JsonHeader -Method Get -UseBasicParsing
+
+            # Convert response_account_server content to hash table
+            $converted_object = $response.Content | ConvertFrom-Json
+            $hash_table = @{}
+            $converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
+
+            #Json Header 加入 { "If-Match" = @odata.etag }
+            $JsonHeader["If-Match"]=$converted_object."@odata.etag"
 
             # Send Patch Request to Modify Network Port
             $response = Invoke-WebRequest -Uri $uri_network_protocol -Headers $JsonHeader -Method Patch -Body $json_body -ContentType 'application/json' -UseBasicParsing
