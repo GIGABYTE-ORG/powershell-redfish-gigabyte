@@ -114,11 +114,6 @@ function get_server_boot_once_types
             "Legacy",
             "UEFI"
         ],
-        "BootSourceOverrideMode": "Legacy",
-        "BootSourceOverrideMode@Redfish.AllowableValues": [
-            "Legacy",
-            "UEFI"
-        ],
         "BootSourceOverrideTarget": "None",
         "BootSourceOverrideTarget@Redfish.AllowableValues": [
             "None",
@@ -140,6 +135,23 @@ function get_server_boot_once_types
 #>                    
             
             # Get bios boot once information
+            $boot_once_dict["BootSourceOverrideEnabled@Redfish.AllowableValues"] =  $converted_object."Boot"."BootSourceOverrideEnabled@Redfish.AllowableValues"
+            if($boot_once_dict["BootSourceOverrideEnabled@Redfish.AllowableValues"] -eq $null )
+            {  
+                #The patched ASUS property 'BootSourceOverrideEnabled@Redfish.AllowableValues' is missing.
+                $boot_once_dict["BootSourceOverrideEnabled@Redfish.AllowableValues"]= @(
+                            "Disabled",
+                            "Once",
+                            "Continuous")
+            }
+            $boot_once_dict["BootSourceOverrideMode@Redfish.AllowableValues"] =  $converted_object."Boot"."BootSourceOverrideMode@Redfish.AllowableValues"
+            if($boot_once_dict["BootSourceOverrideMode@Redfish.AllowableValues"] -eq $null )
+            {  
+                #The patched ASUS property 'BootSourceOverrideMode@Redfish.AllowableValues' is missing.
+                $boot_once_dict["BootSourceOverrideMode@Redfish.AllowableValues"]= @(
+                            "Legacy",
+                            "UEFI")
+            }
             $boot_once_dict["BootSourceOverrideTarget@Redfish.AllowableValues"] =  $converted_object."Boot"."BootSourceOverrideTarget@Redfish.AllowableValues"
             if($boot_once_dict["BootSourceOverrideTarget@Redfish.AllowableValues"] -eq $null )
             {  
