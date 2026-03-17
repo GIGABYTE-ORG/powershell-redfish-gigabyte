@@ -106,13 +106,13 @@ function reset_bios_default{
             
             $response = Invoke-WebRequest -Uri $uri_address_system -Headers $JsonHeader -Method Get -UseBasicParsing
             
-            $converted_object = $response.Content | ConvertFrom-Json
+            $converted_object = $response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
             $hash_table = @{}
             $converted_object.psobject.properties | Foreach { $hash_table[$_.Name] = $_.Value }
 
             
-            $temp = [string]$hash_table.BIOS
-            $uri_address_bios = "https://$ip"+($temp.Split("=")[1].Replace("}",""))
+            $temp =[string]$hash_table.Bios."@odata.id"
+            $uri_address_bios = "https://$ip"+$temp
 
             $response = Invoke-WebRequest -Uri $uri_address_Bios -Headers $JsonHeader -Method Get -UseBasicParsing
 
