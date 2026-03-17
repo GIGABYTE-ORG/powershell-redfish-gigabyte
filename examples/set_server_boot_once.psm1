@@ -111,6 +111,20 @@ function set_server_boot_once
             # get etag to set If-Match precondition
             $response = Invoke-WebRequest -Uri $uri_address_system -Headers $JsonHeader -Method Get -UseBasicParsing
             $converted_object = $response.Content | ConvertFrom-Json
+
+<#
+    "@Redfish.Settings": {
+        "@odata.type": "#Settings.v1_2_2.Settings",
+        "SettingsObject": {
+            "@odata.id": "/redfish/v1/Systems/Self/SD"
+        }
+    },
+#>
+            # Get system futurestate(SD) url from the system url collection
+            $sduri_address_system = "https://$ip"+$converted_object."@Redfish.Settings"."SettingsObject"."@odata.id"
+            $response = Invoke-WebRequest -Uri $sduri_address_system -Headers $JsonHeader -Method Get -UseBasicParsing
+            $converted_object = $response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
+
             if($converted_object."@odata.etag" -ne $null)
             {
                 $JsonHeader = @{ "If-Match" = $converted_object."@odata.etag"
@@ -130,7 +144,7 @@ function set_server_boot_once
             $json_body = $body | convertto-json
             try
             {
-                $response = Invoke-WebRequest -Uri $uri_address_system -Headers $JsonHeader -Method Patch -Body $json_body -ContentType 'application/json'
+                $response = Invoke-WebRequest -Uri $sduri_address_system -Headers $JsonHeader -Method Patch -Body $json_body -ContentType 'application/json'
             }
             catch
             {
