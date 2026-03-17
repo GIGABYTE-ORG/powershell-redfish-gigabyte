@@ -176,9 +176,27 @@ function get_hostinterface
                 }
 
                 $hostinterface_dict["HostEthernetInterfaces"] = $HostEthernetInterfaces
+
+                # Get ManagerEthernetInterface resource
+                $managerethernet_url ="https://$ip" + $converted_object_hash_table.ManagerEthernetInterface."@odata.id"
+                $response_ManagerEthernetInterface = Invoke-WebRequest -Uri $managerethernet_url -Headers $JsonHeader -Method Get -UseBasicParsing
+                $ManagerEthernetInterface_converted_object = $response_ManagerEthernetInterface.Content | ConvertFrom-Json
+                $ManagerEthernetInterface_hash_table = @{}
+                $ManagerEthernetInterface_converted_object.psobject.properties | Foreach { $ManagerEthernetInterface_hash_table[$_.Name] = $_.Value }
+                # Get each ManagerEthernetInterface resource
+                $ManagerEthernetInterface = @{}
+                foreach ($key in $ManagerEthernetInterface_hash_table.Keys)
+                {
+                    if ("Description", "@odata.context", "@odata.id", "@odata.type", "@odata.etag" -notcontains $key)
+                    {
+                        $ManagerEthernetInterface[$key] = $ManagerEthernetInterface_hash_table.$key
+                    }
+                }
+                $hostinterface_dict["ManagerEthernetInterface"] = $ManagerEthernetInterface
+                
                 $hostinterfaces += $hostinterface_dict
                 # Output result
-                ConvertOutputHashTableToObject $hostinterfaces | ConvertTo-Json
+                ConvertOutputHashTableToObject $hostinterfaces #| ConvertTo-Json
 
             }
         }
