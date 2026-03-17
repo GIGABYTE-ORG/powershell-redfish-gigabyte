@@ -101,10 +101,51 @@ function get_server_boot_once_types
             # Get system resource
             $url_address_system = "https://$ip"+$system_url_string
             $response = Invoke-WebRequest -Uri $url_address_system -Headers $JsonHeader -Method Get -UseBasicParsing
-            $converted_object = $response.Content | ConvertFrom-Json
+            $converted_object = $response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
+<#
+       "BootSourceOverrideEnabled": "Disabled",
+        "BootSourceOverrideEnabled@Redfish.AllowableValues": [
+            "Disabled",
+            "Once",
+            "Continuous"
+        ],
+        "BootSourceOverrideMode": "Legacy",
+        "BootSourceOverrideMode@Redfish.AllowableValues": [
+            "Legacy",
+            "UEFI"
+        ],
+        "BootSourceOverrideMode": "Legacy",
+        "BootSourceOverrideMode@Redfish.AllowableValues": [
+            "Legacy",
+            "UEFI"
+        ],
+        "BootSourceOverrideTarget": "None",
+        "BootSourceOverrideTarget@Redfish.AllowableValues": [
+            "None",
+            "Pxe",
+            "Floppy",
+            "Cd",
+            "Usb",
+            "Hdd",
+            "BiosSetup",
+            "Utilities",
+            "UefiShell",
+            "UefiTarget",
+            "SDCard",
+            "UefiHttp",
+            "RemoteDrive",
+            "UefiBootNext"
+        ],
+
+#>                    
             
             # Get bios boot once information
-            $boot_once_dict["BootSourceOverrideTarget@Redfish.AllowableValues"] = $converted_object."Boot"."BootSourceOverrideTarget@Redfish.AllowableValues"
+            $boot_once_dict["BootSourceOverrideTarget@Redfish.AllowableValues"] =  $converted_object."Boot"."BootSourceOverrideTarget@Redfish.AllowableValues"
+            if($boot_once_dict["BootSourceOverrideTarget@Redfish.AllowableValues"] -eq $null )
+            {  
+                #The patched ASUS property 'BootSourceOverrideTarget@Redfish.AllowableValues' is missing.
+                $boot_once_dict["BootSourceOverrideTarget@Redfish.AllowableValues"]= @("Disabled","Once","Continuous") 
+            }
             ConvertOutputHashTableToObject $boot_once_dict
         }
     }
