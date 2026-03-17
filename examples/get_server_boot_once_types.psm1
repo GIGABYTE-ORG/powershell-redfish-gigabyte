@@ -144,7 +144,21 @@ function get_server_boot_once_types
             if($boot_once_dict["BootSourceOverrideTarget@Redfish.AllowableValues"] -eq $null )
             {  
                 #The patched ASUS property 'BootSourceOverrideTarget@Redfish.AllowableValues' is missing.
-                $boot_once_dict["BootSourceOverrideTarget@Redfish.AllowableValues"]= @("Disabled","Once","Continuous") 
+                $boot_once_dict["BootSourceOverrideTarget@Redfish.AllowableValues"]= @(
+                            "None",
+                            "Pxe",
+                            "Floppy",
+                            "Cd",
+                            "Usb",
+                            "Hdd",
+                            "BiosSetup",
+                            "Utilities",
+                            "UefiShell",
+                            "UefiTarget",
+                            "SDCard",
+                            "UefiHttp",
+                            "RemoteDrive",
+                            "UefiBootNext") 
             }
             ConvertOutputHashTableToObject $boot_once_dict
         }
