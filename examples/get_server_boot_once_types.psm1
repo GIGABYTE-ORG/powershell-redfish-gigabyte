@@ -103,77 +103,19 @@ function get_server_boot_once_types
             $response = Invoke-WebRequest -Uri $url_address_system -Headers $JsonHeader -Method Get -UseBasicParsing
             $converted_object = $response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
 <#
-       "BootSourceOverrideEnabled": "Disabled",
-        "BootSourceOverrideEnabled@Redfish.AllowableValues": [
-            "Disabled",
-            "Once",
-            "Continuous"
-        ],
-        "BootSourceOverrideMode": "Legacy",
-        "BootSourceOverrideMode@Redfish.AllowableValues": [
-            "Legacy",
-            "UEFI"
-        ],
-        "BootSourceOverrideTarget": "None",
-        "BootSourceOverrideTarget@Redfish.AllowableValues": [
-            "None",
-            "Pxe",
-            "Floppy",
-            "Cd",
-            "Usb",
-            "Hdd",
-            "BiosSetup",
-            "Utilities",
-            "UefiShell",
-            "UefiTarget",
-            "SDCard",
-            "UefiHttp",
-            "RemoteDrive",
-            "UefiBootNext"
-        ],
-
-#>                    
-            
-            # Get bios boot once information
-<#
-            $boot_once_dict["BootSourceOverrideEnabled@Redfish.AllowableValues"] =  $converted_object."Boot"."BootSourceOverrideEnabled@Redfish.AllowableValues"
-            if($boot_once_dict["BootSourceOverrideEnabled@Redfish.AllowableValues"] -eq $null )
-            {  
-                #The patched ASUS property 'BootSourceOverrideEnabled@Redfish.AllowableValues' is missing.
-                $boot_once_dict["BootSourceOverrideEnabled@Redfish.AllowableValues"]= @(
-                            "Disabled",
-                            "Once",
-                            "Continuous")
-            }
-            $boot_once_dict["BootSourceOverrideMode@Redfish.AllowableValues"] =  $converted_object."Boot"."BootSourceOverrideMode@Redfish.AllowableValues"
-            if($boot_once_dict["BootSourceOverrideMode@Redfish.AllowableValues"] -eq $null )
-            {  
-                #The patched ASUS property 'BootSourceOverrideMode@Redfish.AllowableValues' is missing.
-                $boot_once_dict["BootSourceOverrideMode@Redfish.AllowableValues"]= @(
-                            "Legacy",
-                            "UEFI")
-            }
-#>            
+    "@Redfish.Settings": {
+        "@odata.type": "#Settings.v1_2_2.Settings",
+        "SettingsObject": {
+            "@odata.id": "/redfish/v1/Systems/Self/SD"
+        }
+    },
+#>
+            # Get system futurestate url from the system url collection
+            $sduri_address_system = "https://$ip"+$converted_object."@Redfish.Settings"."SettingsObject"."@odata.id"
+            $response = Invoke-WebRequest -Uri $sduri_address_system -Headers $JsonHeader -Method Get -UseBasicParsing
+            $converted_object = $response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
+    
             $boot_once_dict["BootSourceOverrideTarget@Redfish.AllowableValues"] =  $converted_object."Boot"."BootSourceOverrideTarget@Redfish.AllowableValues"
-            if($boot_once_dict["BootSourceOverrideTarget@Redfish.AllowableValues"] -eq $null )
-            {  
-                #The patched ASUS property 'BootSourceOverrideTarget@Redfish.AllowableValues' is missing.
-                $boot_once_dict["BootSourceOverrideTarget@Redfish.AllowableValues"]= @(
-                            "None",
-                            "Pxe",
-                            "Floppy",
-                            "Cd",
-                            "Usb",
-                            "Hdd",
-                            "BiosSetup",
-                            "Utilities",
-                            "UefiShell",
-                            "UefiTarget",
-                            "SDCard",
-                            "UefiHttp",
-                            "RemoteDrive",
-                            "UefiBootNext") 
-            }
             ConvertOutputHashTableToObject $boot_once_dict
         }
     }
