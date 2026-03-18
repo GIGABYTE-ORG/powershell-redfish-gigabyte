@@ -94,73 +94,7 @@ function get_bios_bootmode
         # Get the system url collection
         $system_url_collection = @()
         $system_url_collection = get_system_urls -bmcip $ip -session $session -system_id $system_id
-<#
-/redfish/v1/Systems/Self
-{
-    "Bios": {
-        "@odata.id": "/redfish/v1/Systems/Self/Bios"
-    },
-    "BiosVersion": "1203",
-    "Boot": {
-        "BootNext": null,
-        "BootOptions": {
-            "@odata.id": "/redfish/v1/Systems/Self/BootOptions"
-        },
-        "BootOrder": [
-            "Boot0000"
-        ],
-        "BootOrderPropertySelection": "BootOrder",
-        "BootSourceOverrideEnabled": "Disabled",
-        "BootSourceOverrideMode": "Legacy",
-        "BootSourceOverrideTarget": "None",
-        "Certificates": {
-            "@odata.id": "/redfish/v1/Systems/Self/Boot/Certificates"
-        },
-        "HttpBootUri": null,
-        "UefiTargetBootSourceOverride": null
-    },
-}
-BootSourceOverrideMode 是當前生效的開機模式，而不是「下一次覆蓋」才使用的模式。即使 BootSourceOverrideEnabled 為 Disabled，此欄位依然正確反映系統目前的 BIOS 模式
 
-/redfish/v1/Systems/Self/BootOptions
-{
-    "@odata.context": "/redfish/v1/$metadata#BootOptionCollection.BootOptionCollection",
-    "@odata.etag": "\"1770950790\"",
-    "@odata.id": "/redfish/v1/Systems/Self/BootOptions",
-    "@odata.type": "#BootOptionCollection.BootOptionCollection",
-    "Description": "Collection of BootOption for this system",
-    "Members": [
-        {
-            "@odata.id": "/redfish/v1/Systems/Self/BootOptions/0000"
-        }
-    ],
-    "Members@odata.count": 1,
-    "Name": "BootOption Collection"
-}
-
-/redfish/v1/Systems/Self/BootOptions/0000
-{
-    "@Redfish.Settings": {
-        "@odata.type": "#Settings.v1_2_2.Settings",
-        "SettingsObject": {
-            "@odata.id": "/redfish/v1/Systems/Self/BootOptions/0000/SD"
-        }
-    },
-    "@odata.context": "/redfish/v1/$metadata#BootOption.BootOption",
-    "@odata.etag": "\"1770868744\"",
-    "@odata.id": "/redfish/v1/Systems/Self/BootOptions/0000",
-    "@odata.type": "#BootOption.v1_0_3.BootOption",
-    "Alias": "Hdd",
-    "BootOptionEnabled": true,
-    "BootOptionReference": "Boot0000",
-    "Description": "Windows Boot Manager",
-    "DisplayName": "Windows Boot Manager",
-    "Id": "0000",
-    "Name": "Boot0000",
-    "RelatedItem@odata.count": 0,
-    "UefiDevicePath": "HD(1,GPT,EC9ABBB5-A4D8-4825-9CC5-50B8AC6481A5,0x800,0x64000)/\\EFI\\Microsoft\\Boot\\bootmgfw.efi"
-}
-#>
         # Loop all System resource instance in $system_url_collection
         foreach($system_url_string in $system_url_collection)
         {
@@ -171,11 +105,18 @@ BootSourceOverrideMode 是當前生效的開機模式，而不是「下一次覆
             $url_address_system = "https://$ip"+$system_url_string
             $response = Invoke-WebRequest -Uri $url_address_system -Headers $JsonHeader -Method Get -UseBasicParsing
             $converted_object = $response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
-            # Output result
-            $converted_object.boot.BootSourceOverrideMode
-            #TODO:
-            #BootOptions                  {[@odata.id, /redfish/v1/Systems/Self/BootOptions]}  
-            #Certificates                 {[@odata.id, /redfish/v1/Systems/Self/Boot/Certificates]}
+            $boot_mode_dict["State"]="Current"
+            $boot_mode_dict["BootSourceOverrideMode"] =  $converted_object."Boot"."BootSourceOverrideMode"
+            ConvertOutputHashTableToObject $boot_mode_dict
+            # Get system futurestate url from the system url collection
+            $sduri_address_system = "https://$ip"+$converted_object."@Redfish.Settings"."SettingsObject"."@odata.id"
+            $response = Invoke-WebRequest -Uri $sduri_address_system -Headers $JsonHeader -Method Get -UseBasicParsing
+            $converted_object = $response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
+
+            # Get bios boot once information
+            $boot_mode_dict["State"]="Future"
+            $boot_mode_dict["BootSourceOverrideMode"] = $converted_object."Boot"."BootSourceOverrideMode"
+            ConvertOutputHashTableToObject $boot_mode_dict
         }
         
     }
