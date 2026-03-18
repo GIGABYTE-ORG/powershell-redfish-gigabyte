@@ -105,10 +105,32 @@ function get_server_boot_once
             $converted_object = $response.Content | ConvertFrom-Json
 
             # Get bios boot once information
+            $boot_once_dict["State"]="Current"
             $boot_once_dict["BootSourceOverrideEnabled"] = $converted_object."Boot"."BootSourceOverrideEnabled"
             $boot_once_dict["BootSourceOverrideMode"] = $converted_object."Boot"."BootSourceOverrideMode"
             $boot_once_dict["BootSourceOverrideTarget"] = $converted_object."Boot"."BootSourceOverrideTarget"
             ConvertOutputHashTableToObject $boot_once_dict
+
+<#
+    "@Redfish.Settings": {
+        "@odata.type": "#Settings.v1_2_2.Settings",
+        "SettingsObject": {
+            "@odata.id": "/redfish/v1/Systems/Self/SD"
+        }
+    },
+#>
+            # Get system futurestate url from the system url collection
+            $sduri_address_system = "https://$ip"+$converted_object."@Redfish.Settings"."SettingsObject"."@odata.id"
+            $response = Invoke-WebRequest -Uri $sduri_address_system -Headers $JsonHeader -Method Get -UseBasicParsing
+            $converted_object = $response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
+
+            # Get bios boot once information
+            $boot_once_dict["State"]="Future"
+            $boot_once_dict["BootSourceOverrideEnabled"] = $converted_object."Boot"."BootSourceOverrideEnabled"
+            $boot_once_dict["BootSourceOverrideMode"] = $converted_object."Boot"."BootSourceOverrideMode"
+            $boot_once_dict["BootSourceOverrideTarget"] = $converted_object."Boot"."BootSourceOverrideTarget"
+            ConvertOutputHashTableToObject $boot_once_dict
+            
         }
         
     }
