@@ -106,7 +106,7 @@ function reset_secure_boot
             # Get system resource
             $system_url_string = "https://$ip" + $system_url_string
             $response = Invoke-WebRequest -Uri $system_url_string -Headers $JsonHeader -Method Get -UseBasicParsing
-            $converted_object = $response.Content | ConvertFrom-Json
+            $converted_object = $response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
 
             # Get secure boot resource
             $secure_boot_url ="https://$ip" + $converted_object."SecureBoot"."@odata.id"
@@ -120,8 +120,10 @@ function reset_secure_boot
         }
 
         # Return result
-        $ret = @{ret = "True";msg = "reset successful"}
-        $ret
+        Write-Host
+            [String]::Format("- PASS, statuscode {0} returned successfully for reset secure boot keys",$response.StatusCode)
+        return $True
+
     }
     catch
     {
