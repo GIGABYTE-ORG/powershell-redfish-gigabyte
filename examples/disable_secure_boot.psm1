@@ -102,8 +102,21 @@ function disable_secure_boot
             # Get system resource
             $system_url_string = "https://$ip" + $system_url_string
             $response = Invoke-WebRequest -Uri $system_url_string -Headers $JsonHeader -Method Get -UseBasicParsing
-            $converted_object = $response.Content | ConvertFrom-Json
-
+            $converted_object = $response.Content | ConvertFrom-JsonWithDuplicates #ConvertFrom-Json : fixed ASUS Bug: Unable to convert the JSON string because the dictionary created from this string contains duplicate keys 'AMI' and 'Ami'.
+ 
+            if($converted_object."@odata.etag" -ne $null)
+            {
+                $JsonHeader = @{ "If-Match" = $converted_object."@odata.etag"
+                            "X-Auth-Token" = $session_key
+                }
+            }
+            else
+            {
+                $JsonHeader = @{ "If-Match" = ""
+                            "X-Auth-Token" = $session_key
+                }
+            }
+            
             # Set SecureBootDisable True
             $secureboot_url = "https://$ip" +  $converted_object."SecureBoot"."@odata.id"
             $JsonBody = @{"SecureBootEnable" = $False} | ConvertTo-Json -Compress
@@ -111,8 +124,9 @@ function disable_secure_boot
         }
 
         # Return result
-        $ret = @{ret = "True";msg = "PATCH command successfully completed for Disable secure boot"}
-        $ret
+        Write-Host
+            [String]::Format("- PASS, statuscode {0} returned successfully for disable secure boot",$response.StatusCode)
+        return $True
     }
     catch
     {
