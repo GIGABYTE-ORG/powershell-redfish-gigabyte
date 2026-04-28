@@ -113,7 +113,7 @@ function get_chassis_inventory
             $chassis_inventory = $ht_chassis_members
 
             # Delete content with only url property
-            foreach($property in ("Links", "@odata.etag", "@odata.id", "@odata.type",,"@odata.context" "LogServices",
+            foreach($property in ("Links", "@odata.etag", "@odata.id", "@odata.type", "@odata.context", "LogServices",
             "Memory", "NetworkAdapters", "PCIeDevices", "PCIepythonSlots", "Power", "Thermal","Fru","PCIeSlots","MediaControllers",
             "Controls", "EnvironmentMetrics", "PowerSubsystem", "Sensors", "ThermalSubsystem"))
             {
