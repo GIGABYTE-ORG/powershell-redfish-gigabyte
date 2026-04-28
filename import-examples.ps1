@@ -2,7 +2,7 @@
 # Import all *.psm1 under ./example
 
 $ScriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$ModulePath = Join-Path $ScriptRoot "example"
+$ModulePath = Join-Path $ScriptRoot "examples"
 
 if (-not (Test-Path $ModulePath)) {
     Write-Error "Module folder not found: $ModulePath"
